@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/sm6srw/node-red-contrib-antenna-genius/issues"
   },
-  "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme"
+  "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
+  "node-red" : {
+    "nodes": {
+        "lower-case": "lower-case.js"
+    }
+}
 }

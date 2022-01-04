@@ -20,7 +20,8 @@
   "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
   "node-red": {
     "nodes": {
-      "lower-case": "lower-case.js"
+      "lower-case": "lower-case.js",
+      "antenna-genius-server": "antenna-genius-server.js"
     }
   },
   "dependencies": {

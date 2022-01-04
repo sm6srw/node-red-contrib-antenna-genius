@@ -4,10 +4,10 @@
   "description": "Nodes for interacting with Antenna Genius",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha \"test/**/*_spec.js\"",
     "start": "c: && cd C:/Users/dahlj.GREATSTONE/.node-red && node C:/Users/dahlj.GREATSTONE/AppData/Roaming/npm/node_modules/node-red/red.js -v -u . -s settings.js",
     "debug": "c: && cd C:/Users/dahlj.GREATSTONE/.node-red && node --nolazy --inspect-brk=9229 C:/Users/dahlj.GREATSTONE/AppData/Roaming/npm/node_modules/node-red/red.js -v -u . -s settings.js"
-},
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sm6srw/node-red-contrib-antenna-genius.git"
@@ -18,9 +18,13 @@
     "url": "https://github.com/sm6srw/node-red-contrib-antenna-genius/issues"
   },
   "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
-  "node-red" : {
+  "node-red": {
     "nodes": {
-        "lower-case": "lower-case.js"
+      "lower-case": "lower-case.js"
     }
+  },
+  "dependencies": {
+    "node-red":"^2.1.4",
+    "node-red-node-test-helper": "^0.2.7"
   }
 }

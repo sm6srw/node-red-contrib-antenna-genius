@@ -11,7 +11,19 @@ module.exports = function(RED) {
         this.server.client.on('error', () => {
             this.status({fill:"red",shape:"ring",text:"disconnected"});        
         });
-        
+
+        this.server.updatesEventEmitter.on("status", () => {
+//            console.log('status');
+        });
+
+        this.server.updatesEventEmitter.on("antennas", () => {
+//            console.log('antennas');
+        });
+
+        this.server.updatesEventEmitter.on("bands", () => {
+//            console.log('bands');
+        });
+
         node.on('input', function(msg) {
             msg.payload = msg.payload.toLowerCase();
             node.send(msg);

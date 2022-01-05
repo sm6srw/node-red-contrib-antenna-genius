@@ -12,7 +12,9 @@ module.exports = (RED) => {
             this.host = n.host;
             this.port = n.port;
 
-            this.data = {};
+            this.status = {};
+            this.antennas = [];
+            this.bands = [];
             this.interval = null;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
@@ -21,13 +23,13 @@ module.exports = (RED) => {
 
             this.client.on('error', (err) => {
                 clearInterval(this.interval);
-                console.log('TCP connection failed with the server.');
+                console.log('TCP connection failed with AG.');
             });
 
             this.on('close', (done) => {
                 clearInterval(this.interval);
                 this.client.end();
-                console.log('Shutdown config node.');
+                console.log('Shutdown AG config node.');
                 done();
             });
 
@@ -39,31 +41,30 @@ module.exports = (RED) => {
                 let command = Utils.encode(0, 0, 401, 0, "");
                 await promiseClient.write(command);
                 let packet = await promiseClient.read();
-                this.data = Utils.decode(packet);
+                this.status = Utils.decode(packet);
 
-                var numAntennas = 8 * this.data.stackReach;
-                this.data.antennas = [];
+                var numAntennas = 8 * this.status.stackReach;
                 for (let index = 1; index <= numAntennas; ++index) {
                     let command = Utils.encode(0, 0, 412, 0, index.toString());
                     await promiseClient.write(command);
                     let packet = await promiseClient.read();
                     let data = Utils.decode(packet);
-                    this.data.antennas.push(data);
+                    this.antennas.push(data);
                 }
+                this.updatesEventEmitter.emit("antennas");
 
-                this.data.bands = [];
                 for (let index = 0; index < 16; ++index) {
                     let command = Utils.encode(0, 0, 82, 0, index.toString());
                     await promiseClient.write(command);
                     let packet = await promiseClient.read();
                     let data = Utils.decode(packet);
-                    this.data.bands.push(data);
+                    this.bands.push(data);
                 }
+                this.updatesEventEmitter.emit("bands");
 
                 this.client.on('data', (packet) => {
-                    console.log('Poll!');
-                    this.data = { ...this.data, ...Utils.decode(packet) };
-                    this.updatesEventEmitter.emit();
+                    this.status = { ...this.status, ...Utils.decode(packet) };
+                    this.updatesEventEmitter.emit("status");
                 });
 
                 this.interval = setInterval(() => {

@@ -26,11 +26,6 @@ module.exports = function(RED) {
         this.server.updatesEventEmitter.on("bands", () => {
 //            console.log('bands');
         });
-
-        node.on('input', function(msg) {
-            msg.payload = msg.payload.toLowerCase();
-            node.send(msg);
-        });
     }
     RED.nodes.registerType("antenna-genius-antenna-status",AntennaGeniusAntennaStatus);
 }

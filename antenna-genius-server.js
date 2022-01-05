@@ -18,8 +18,11 @@ module.exports = (RED) => {
             this.interval = null;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
+            this.updatesEventEmitter.setMaxListeners(0);
 
             this.client = new Net.Socket();
+
+            this.client.setMaxListeners(0);
 
             this.client.on('error', (err) => {
                 clearInterval(this.interval);

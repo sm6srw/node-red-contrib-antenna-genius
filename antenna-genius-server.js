@@ -2,6 +2,7 @@ const Net = require('net');
 const {PromiseSocket} = require("promise-socket");
 const EventEmitter = require('events');
 const Utils = require('./Utils');
+const { nodes } = require('node-red');
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -66,8 +67,11 @@ module.exports = (RED) => {
                 this.updatesEventEmitter.emit("bands");
 
                 this.client.on('data', (packet) => {
-                    this.status = { ...this.status, ...Utils.decode(packet) };
-                    this.updatesEventEmitter.emit("status");
+                    let decoded = Utils.decode(packet);
+                    if(decoded.command == 401) {
+                        this.status = { ...this.status, ...Utils.decode(packet) };
+                        this.updatesEventEmitter.emit("status");
+                    }
                 });
 
                 this.interval = setInterval(() => {

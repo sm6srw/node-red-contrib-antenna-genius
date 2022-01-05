@@ -71,26 +71,26 @@ module.exports = (RED) => {
 
                 if (radioAenabled) {
                     if (radioAselected) {
-                        this.radioA.background = "blue";
+                        this.radioA.background = this.server.selectedColor;
                     }
                     else {
-                        this.radioA.background = "green";
+                        this.radioA.background = this.server.activeColor;
                     }
                 }
                 else {
-                    this.radioA.background = "gray";
+                    this.radioA.background = this.server.disabledColor;
                 }
 
                 if (radioBenabled) {
                     if (radioBselected) {
-                        this.radioB.background = "blue";
+                        this.radioB.background = this.server.selectedColor;
                     }
                     else {
-                        this.radioB.background = "green";
+                        this.radioB.background = this.server.activeColor;
                     }
                 }
                 else {
-                    this.radioB.background = "gray";
+                    this.radioB.background = this.server.disabledColor;
                 }
 
                 let radioATopic = "1;" + this.antennaNumber;

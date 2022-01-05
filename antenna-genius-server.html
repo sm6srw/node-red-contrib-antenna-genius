@@ -3,10 +3,13 @@
         category: 'config',
         defaults: {
             host: {value:"localhost",required:true},
-            port: {value:1234,required:true,validate:RED.validators.number()},
+            port: {value:9007,required:true,validate:RED.validators.number()},
+            disabledColor: {value:"Black", required:true},
+            activeColor: {value:"Green", required:true},
+            selectedColor: {value:"Blue", required:true},
         },
         label: function() {
-            return this.host+":"+this.port;
+            return "Antenna Genius at " + this.host + ":" + this.port;
         }
     });
 </script>
@@ -19,5 +22,17 @@
     <div class="form-row">
         <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
         <input type="text" id="node-config-input-port">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-disabledColor"><i class="fa fa-bookmark"></i> Disabled Background</label>
+        <input type="text" id="node-config-input-disabledColor">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-activeColor"><i class="fa fa-bookmark"></i> Active Background</label>
+        <input type="text" id="node-config-input-activeColor">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-selectedColor"><i class="fa fa-bookmark"></i> Selected Background</label>
+        <input type="text" id="node-config-input-selectedColor">
     </div>
 </script>

@@ -12,6 +12,9 @@ module.exports = (RED) => {
             RED.nodes.createNode(this, n);
             this.host = n.host;
             this.port = n.port;
+            this.disabledColor = n.disabledColor;
+            this.activeColor = n.activeColor;
+            this.selectedColor = n.selectedColor;
 
             this.status = {};
             this.antennas = [];

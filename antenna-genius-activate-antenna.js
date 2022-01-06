@@ -30,8 +30,7 @@ module.exports = (RED) => {
                 if(done) {
                     done();
                 }
-        });
-
+            });
         }
     }
     RED.nodes.registerType("antenna-genius-activate-antenna", AntennaGeniusActivateAntenna);

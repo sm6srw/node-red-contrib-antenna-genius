@@ -11,7 +11,7 @@ describe('lower-case Node', function () {
     var flow = [{ id: "n1", type: "lower-case", name: "test name" }];
     helper.load(lowerNode, flow, function () {
       var n1 = helper.getNode("n1");
-//      n1.should.have.property('name', 'test name');
+      n1.should.have.property('name', 'test name');
       done();
     });
   });
@@ -26,8 +26,7 @@ describe('lower-case Node', function () {
         msg.should.have.property('payload', 'uppercase');
         done();
       });
-//      n1.receive({ payload: "UpperCase" });
-      done();
+      n1.receive({ payload: "UpperCase" });
     });
   });
 });

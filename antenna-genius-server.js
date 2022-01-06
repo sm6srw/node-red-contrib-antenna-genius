@@ -15,6 +15,7 @@ module.exports = (RED) => {
             this.disabledColor = n.disabledColor;
             this.activeColor = n.activeColor;
             this.selectedColor = n.selectedColor;
+            this.autoConnect = n.autoConnect || false;
 
             this.status = {};
             this.antennas = [];
@@ -31,11 +32,13 @@ module.exports = (RED) => {
             this.client.on('close', () => {
                 console.log('TCP connection disconnected with the server.');
                 clearInterval(this.interval);
-                console.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
-                setTimeout(() => {
-                    console.log('Reconnecting...');
-                    this.client.connect(this.port, this.host);
-                }, 5000);
+                if(this.autoConnect) {
+                    console.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
+                    setTimeout(() => {
+                        console.log('Reconnecting...');
+                        this.client.connect(this.port, this.host);
+                    }, 5000);
+                }
             });
 
             this.client.on('connect', async () => {
@@ -93,7 +96,12 @@ module.exports = (RED) => {
                 done();
             });
 
-            this.client.connect(this.port, this.host);
+            if(this.autoConnect) {
+                this.client.connect(this.port, this.host);
+            }
+            else {
+                console.log('Autoconnect off');
+            }
         }
     }
 

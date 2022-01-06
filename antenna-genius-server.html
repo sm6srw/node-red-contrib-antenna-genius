@@ -7,6 +7,7 @@
             disabledColor: {value:"Black", required:true},
             activeColor: {value:"Green", required:true},
             selectedColor: {value:"Blue", required:true},
+            autoConnect: {value:true},
         },
         label: function() {
             return "Antenna Genius at " + this.host + ":" + this.port;
@@ -34,5 +35,9 @@
     <div class="form-row">
         <label for="node-config-input-selectedColor"><i class="fa fa-bookmark"></i> Selected Background</label>
         <input type="text" id="node-config-input-selectedColor">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-autoConnect"><i class="fa fa-bookmark"></i> Auto Connect</label>
+        <input type="checkbox" id="node-config-input-autoConnect">
     </div>
 </script>

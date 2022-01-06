@@ -57,6 +57,9 @@ const decode = (msg) => {
     const params = header.payload.split(";");
     let data = {};
     switch(header.command) {
+        case 24:
+            data = decode24(params);
+            break;
         case 82:
             data = decode82(params);
             break;
@@ -66,8 +69,18 @@ const decode = (msg) => {
         case 412:
             data = decode412(params);
             break;
-        }
+    }
     return {...header, ...data};
+};
+
+const decode24 = (data) => {
+    let msg = {};
+
+    msg.indentification = parseInt(data[0]);
+    msg.group = parseInt(data[1]);
+    msg.name = data[2];
+
+    return msg;
 };
 
 const decode82 = (data) => {

@@ -8,8 +8,8 @@ module.exports = (RED) => {
             this.bandNameB = "";
             this.server = RED.nodes.getNode(config.server);
 
-            this.server.client.on('connect', () => {
-                this.status({ fill: "green", shape: "dot", text: "connected" });
+            this.server.updatesEventEmitter.on("connected", () => {
+                this.status({ fill: "green", shape: "dot", text: this.server.info.name });
             });
 
             this.server.client.on('close', () => {

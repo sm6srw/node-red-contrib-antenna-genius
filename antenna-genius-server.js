@@ -18,6 +18,7 @@ module.exports = (RED) => {
             this.autoConnect = n.autoConnect || false;
 
             this.status = {};
+            this.info = {};
             this.antennas = [];
             this.bands = [];
             this.interval = null;
@@ -31,21 +32,21 @@ module.exports = (RED) => {
             this.client.setMaxListeners(0);
 
             this.client.on('close', () => {
-                console.log('TCP connection disconnected with the server.');
+                this.log('TCP connection disconnected with the server.');
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
 
                 if(this.autoConnect) {
-                    console.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
+                    this.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
                     this.timer = setTimeout(() => {
-                        console.log('Reconnecting...');
+                        this.log('Reconnecting...');
                         this.client.connect(this.port, this.host);
                     }, 5000);
                 }
             });
 
             this.client.on('connect', async () => {
-                console.log('TCP connection established with the server.');
+                this.log('TCP connection established with the server.');
     
                 const promiseClient = new PromiseSocket(this.client);
 
@@ -53,6 +54,11 @@ module.exports = (RED) => {
                 await promiseClient.write(command);
                 let packet = await promiseClient.read();
                 this.status = Utils.decode(packet);
+
+                command = Utils.encode(0, 0, 24, 0, "");
+                await promiseClient.write(command);
+                packet = await promiseClient.read();
+                this.info = Utils.decode(packet);
 
                 var numAntennas = 8 * this.status.stackReach;
                 for (let index = 1; index <= numAntennas; ++index) {
@@ -85,10 +91,12 @@ module.exports = (RED) => {
                     let command = Utils.encode(0, 0, 401, 0, "");
                     this.client.write(command);
                 }, 400);
+
+                this.updatesEventEmitter.emit("connected");
             })
 
             this.client.on('error', (err) => {
-                console.log(err);
+                this.warn(err);
             });
 
             this.on('close', (done) => {
@@ -96,7 +104,7 @@ module.exports = (RED) => {
                 clearTimeout(this.timer);
                 this.autoConnect = false;
                 this.client.end();
-                console.log('Shutdown AG config node.');
+                this.log('Shutdown AG config node.');
                 connected = false;
                 done();
             });
@@ -105,7 +113,7 @@ module.exports = (RED) => {
                 this.client.connect(this.port, this.host);
             }
             else {
-                console.log('Autoconnect off');
+                this.log('Autoconnect off');
             }
         }
     }

@@ -1,6 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('antenna-genius-server',{
         category: 'config',
+        color: '#FFF0F0',
         defaults: {
             host: {value:"localhost",required:true},
             port: {value:9007,required:true,validate:RED.validators.number()},
@@ -36,12 +37,20 @@
         <label for="node-config-input-selectedColor"><i class="fa fa-bookmark"></i> Selected Background</label>
         <input type="text" id="node-config-input-selectedColor">
     </div>
-    <div class="form-row">
-        <label for="node-config-input-autoConnect"><i class="fa fa-bookmark"></i> Auto Connect</label>
-        <input type="checkbox" id="node-config-input-autoConnect">
-    </div>
 </script>
 
 <script type="text/markdown" data-help-name="antenna-genius-server">
-Antenna Genius shared connection configuration
+Antenna Genius shared connection configuration.
+
+### Configuration
+
+: Host (string) : Antenna Genius host name or IP address.
+
+: Port (integer) : Antenna Genius port number.
+
+: Disabled Background (string) : Background color to use for an antenna that is disabled.
+
+: Active Background (string) : Background color to use for an antenna that is active (e.g. can be selected).
+
+: Selected Background (string) : Background color to use for and antenna that is selected.
 </script>

@@ -100,14 +100,6 @@ module.exports = (RED) => {
                     node.send([{ payload: this.radioA, enabled: this.radioA.enabled, topic: radioATopic }, { payload: this.radioB, enabled: this.radioB.enabled, topic: radioBTopic }]);
                 }
             });
-
-            this.server.updatesEventEmitter.on("antennas", () => {
-                //            console.log('antennas');
-            });
-
-            this.server.updatesEventEmitter.on("bands", () => {
-                //            console.log('bands');
-            });
         }
     }
     RED.nodes.registerType("antenna-genius-antenna-status", AntennaGeniusAntennaStatus);

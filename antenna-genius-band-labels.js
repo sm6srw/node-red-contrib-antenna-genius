@@ -36,14 +36,6 @@ module.exports = (RED) => {
                     node.send({ payload: { bandLabelA: bandNameA, bandLabelB: bandNameB } });
                 }
             });
-
-            this.server.updatesEventEmitter.on("antennas", () => {
-                //            console.log('antennas');
-            });
-
-            this.server.updatesEventEmitter.on("bands", () => {
-                //            console.log('bands');
-            });
         }
     }
     RED.nodes.registerType("antenna-genius-band-labels", AntennaGeniusBandLabels);

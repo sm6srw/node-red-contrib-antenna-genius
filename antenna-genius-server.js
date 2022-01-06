@@ -21,6 +21,7 @@ module.exports = (RED) => {
             this.antennas = [];
             this.bands = [];
             this.interval = null;
+            this.timer = null;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
             this.updatesEventEmitter.setMaxListeners(0);
@@ -32,9 +33,11 @@ module.exports = (RED) => {
             this.client.on('close', () => {
                 console.log('TCP connection disconnected with the server.');
                 clearInterval(this.interval);
+                clearTimeout(this.timer);
+
                 if(this.autoConnect) {
                     console.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
-                    setTimeout(() => {
+                    this.timer = setTimeout(() => {
                         console.log('Reconnecting...');
                         this.client.connect(this.port, this.host);
                     }, 5000);
@@ -90,6 +93,8 @@ module.exports = (RED) => {
 
             this.on('close', (done) => {
                 clearInterval(this.interval);
+                clearTimeout(this.timer);
+                this.autoConnect = false;
                 this.client.end();
                 console.log('Shutdown AG config node.');
                 connected = false;

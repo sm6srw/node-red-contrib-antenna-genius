@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('antenna-genius-activate-antenna',{
-        category: 'Antenna Genius',
+        category: 'antenna genius',
         color: '#FFF0F0',
         defaults: {
             name: {value:""},
@@ -10,9 +10,9 @@
         outputs:0,
         icon: "font-awesome/fa-sliders",
         label: function() {
-            return this.name||"AG Set Active Antenna";
+            return this.name||"antenna-genius-activate-antenna";
         },
-        paletteLabel: "Set Active Antenna",
+        paletteLabel: "activate-antenna",
         inputLabels: "Set antenna defined in topic as active",
     });
 </script>
@@ -28,6 +28,6 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="antenna-genius-activate-antenna">
-    <p>Set the antenna defined in topic as active</p>
+<script type="text/markdown" data-help-name="antenna-genius-activate-antenna">
+Set the antenna defined in topic as active
 </script>

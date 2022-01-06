@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('antenna-genius-antenna-status',{
-        category: 'Antenna Genius',
+        category: 'antenna genius',
         color: '#FFF0F0',
         defaults: {
             name: {value:""},
@@ -11,9 +11,9 @@
         outputs:2,
         icon: "font-awesome/fa-wifi",
         label: function() {
-            return this.name||"AG Antenna Status";
+            return this.name||"antenna-genius-antenna-status";
         },
-        paletteLabel: "Antenna Status",
+        paletteLabel: "antenna-status",
         outputLabels: ["Antenna Radio A Status", "Antenna Radio B Status"],
     });
 </script>
@@ -33,6 +33,6 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="antenna-genius-antenna-status">
-    <p>Return Radio A & B status for an antenna</p>
+<script type="text/markdown" data-help-name="antenna-genius-antenna-status">
+Return Radio A & B status for an antenna
 </script>

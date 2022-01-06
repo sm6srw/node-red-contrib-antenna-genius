@@ -1,8 +1,7 @@
 {
-  "name": "red-contrib-antenna-genius",
-  "version": "0.0.1",
-  "description": "Nodes for interacting with Antenna Genius",
-  "main": "index.js",
+  "name": "node-red-contrib-antenna-genius",
+  "version": "0.1.0",
+  "description": "Antenna Genius Control and Monitoring Nodes",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
     "start": "node ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red ",
@@ -19,6 +18,7 @@
   },
   "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
   "node-red": {
+    "version": ">=2.0.0",
     "nodes": {
       "antenna-genius-server": "antenna-genius-server.js",
       "antenna-genius-band-labels": "antenna-genius-band-labels.js",

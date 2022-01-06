@@ -1,5 +1,5 @@
 # node-red-contrib-antenna-genius
-Nodes for interacting with Antenna Genius from 403A
+Antenna Genius Control and Monitoring Nodes
 
 ## antenna-genius-band-labels
 

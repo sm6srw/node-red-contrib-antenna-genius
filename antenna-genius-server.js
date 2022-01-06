@@ -2,7 +2,6 @@ const Net = require('net');
 const {PromiseSocket} = require("promise-socket");
 const EventEmitter = require('events');
 const Utils = require('./Utils');
-const { nodes } = require('node-red');
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -105,7 +104,6 @@ module.exports = (RED) => {
                 this.autoConnect = false;
                 this.client.end();
                 this.log('Shutdown AG config node.');
-                connected = false;
                 done();
             });
 

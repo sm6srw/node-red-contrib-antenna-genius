@@ -14,7 +14,7 @@ module.exports = (RED) => {
                 this.status({ fill: "green", shape: "dot", text: "connected" });
             });
 
-            this.server.client.on('error', () => {
+            this.server.client.on('close', () => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 

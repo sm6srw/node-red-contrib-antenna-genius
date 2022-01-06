@@ -28,21 +28,19 @@ module.exports = (RED) => {
 
             this.client.setMaxListeners(0);
 
-            this.client.on('error', (err) => {
+            this.client.on('close', () => {
+                console.log('TCP connection disconnected with the server.');
                 clearInterval(this.interval);
-                console.log('TCP connection failed with AG.');
+                console.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
+                setTimeout(() => {
+                    console.log('Reconnecting...');
+                    this.client.connect(this.port, this.host);
+                }, 5000);
             });
 
-            this.on('close', (done) => {
-                clearInterval(this.interval);
-                this.client.end();
-                console.log('Shutdown AG config node.');
-                done();
-            });
-
-            this.client.connect(this.port, this.host, async () => {
+            this.client.on('connect', async () => {
                 console.log('TCP connection established with the server.');
-
+    
                 const promiseClient = new PromiseSocket(this.client);
 
                 let command = Utils.encode(0, 0, 401, 0, "");
@@ -81,7 +79,21 @@ module.exports = (RED) => {
                     let command = Utils.encode(0, 0, 401, 0, "");
                     this.client.write(command);
                 }, 400);
+            })
+
+            this.client.on('error', (err) => {
+                console.log(err);
             });
+
+            this.on('close', (done) => {
+                clearInterval(this.interval);
+                this.client.end();
+                console.log('Shutdown AG config node.');
+                connected = false;
+                done();
+            });
+
+            this.client.connect(this.port, this.host);
         }
     }
 

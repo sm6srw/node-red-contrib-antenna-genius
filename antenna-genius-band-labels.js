@@ -12,7 +12,7 @@ module.exports = (RED) => {
                 this.status({ fill: "green", shape: "dot", text: this.server.info.name });
             });
 
-            this.server.client.on('close', () => {
+            this.server.updatesEventEmitter.on('closed', () => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 
@@ -36,6 +36,8 @@ module.exports = (RED) => {
                     node.send({ payload: { bandLabelA: bandNameA, bandLabelB: bandNameB } });
                 }
             });
+
+            this.server.connect();
         }
     }
     RED.nodes.registerType("antenna-genius-band-labels", AntennaGeniusBandLabels);

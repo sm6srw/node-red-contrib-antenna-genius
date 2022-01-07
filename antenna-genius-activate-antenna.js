@@ -14,7 +14,7 @@ module.exports = (RED) => {
                 this.status({ fill: "green", shape: "dot", text: this.server.info.name });
             });
 
-            this.server.client.on('close', () => {
+            this.server.updatesEventEmitter.on('closed', () => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 
@@ -31,6 +31,8 @@ module.exports = (RED) => {
                     done();
                 }
             });
+
+            this.server.connect();
         }
     }
     RED.nodes.registerType("antenna-genius-activate-antenna", AntennaGeniusActivateAntenna);

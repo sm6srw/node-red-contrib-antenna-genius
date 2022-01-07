@@ -23,7 +23,7 @@ module.exports = (RED) => {
                 this.status({ fill: "green", shape: "dot", text: this.server.info.name });
             });
 
-            this.server.client.on('close', () => {
+            this.server.updatesEventEmitter.on('closed', () => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 
@@ -100,6 +100,8 @@ module.exports = (RED) => {
                     node.send([{ payload: this.radioA, enabled: this.radioA.enabled, topic: radioATopic }, { payload: this.radioB, enabled: this.radioB.enabled, topic: radioBTopic }]);
                 }
             });
+
+            this.server.connect();
         }
     }
     RED.nodes.registerType("antenna-genius-antenna-status", AntennaGeniusAntennaStatus);

@@ -2,6 +2,7 @@ const Net = require('net');
 const {PromiseSocket} = require("promise-socket");
 const EventEmitter = require('events');
 const Utils = require('./Utils');
+const { connect } = require('http2');
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -27,25 +28,31 @@ module.exports = (RED) => {
             this.updatesEventEmitter.setMaxListeners(0);
 
             this.client = new Net.Socket();
-
-            this.client.setMaxListeners(0);
+            this.connected = false;
 
             this.client.on('close', () => {
                 this.log('TCP connection disconnected with the server.');
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
 
+                if(this.updatesEventEmitter.listenerCount('closed') == 0) {
+                    this.log('Stop retrying. No nodes are refering this connection anymore.');
+                    return;
+                }
+
                 if(this.autoConnect) {
                     this.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
                     this.timer = setTimeout(() => {
                         this.log('Reconnecting...');
-                        this.client.connect(this.port, this.host);
+                        this.connect();
                     }, 5000);
+                    this.updatesEventEmitter.emit("closed");
                 }
             });
 
             this.client.on('connect', async () => {
                 this.log('TCP connection established with the server.');
+                this.connected = true;
     
                 const promiseClient = new PromiseSocket(this.client);
 
@@ -86,6 +93,7 @@ module.exports = (RED) => {
                     }
                 });
 
+                // Poll status
                 this.interval = setInterval(() => {
                     let command = Utils.encode(0, 0, 401, 0, "");
                     this.client.write(command);
@@ -102,12 +110,15 @@ module.exports = (RED) => {
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
                 this.autoConnect = false;
+                this.connected = false;
                 this.client.end();
                 this.log('Shutdown AG config node.');
                 done();
             });
+        }
 
-            if(this.autoConnect) {
+        connect() {
+            if(this.autoConnect && !this.connected & !this.client.connecting) {
                 this.client.connect(this.port, this.host);
             }
             else {

@@ -1,7 +1,8 @@
 {
   "name": "node-red-contrib-antenna-genius",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Antenna Genius Control and Monitoring Nodes",
+  "keywords": [ "node-red" ],
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
     "start": "node ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red ",

@@ -112,7 +112,6 @@ module.exports = (RED) => {
                 this.autoConnect = false;
                 this.connected = false;
                 this.client.end();
-                this.log('Shutdown AG config node.');
                 done();
             });
         }
@@ -120,9 +119,6 @@ module.exports = (RED) => {
         connect() {
             if(this.autoConnect && !this.connected & !this.client.connecting) {
                 this.client.connect(this.port, this.host);
-            }
-            else {
-                this.log('Autoconnect off');
             }
         }
     }

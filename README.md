@@ -1,9 +1,9 @@
 # node-red-contrib-antenna-genius
 Antenna Genius Control and Monitoring Nodes
 
-![image](https://user-images.githubusercontent.com/7033002/148489952-edbf4307-ab57-4801-b963-337c03b2b095.png) ![image](https://user-images.githubusercontent.com/7033002/148489672-9e2c03e0-a968-4c2f-9dc7-923c5423fad7.png)
+![image](https://user-images.githubusercontent.com/7033002/148573983-00305f15-7acf-4d4d-bb1f-9c820c4b3a79.png) ![image](https://user-images.githubusercontent.com/7033002/148489672-9e2c03e0-a968-4c2f-9dc7-923c5423fad7.png)
 
-![image](https://user-images.githubusercontent.com/7033002/148489839-dba01b50-9f02-4a23-a521-41db6acc96a8.png)
+![image](https://user-images.githubusercontent.com/7033002/148574085-f0705a9c-7ac8-4ca0-b96a-ea7a14975d87.png)
 
 ## antenna-genius-band-labels
 

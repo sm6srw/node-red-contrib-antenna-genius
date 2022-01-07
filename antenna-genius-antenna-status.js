@@ -67,6 +67,7 @@ module.exports = (RED) => {
                 if (this.radioA.name !== name) {
                     changed = true;
                     this.radioA.name = this.radioB.name = name;
+                    this.status({ fill: "green", shape: "dot", text: this.server.info.name + " - " + name});
                 }
 
                 if (radioAenabled) {

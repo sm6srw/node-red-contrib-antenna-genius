@@ -34,6 +34,7 @@ module.exports = (RED) => {
                 }
                 if (changed) {
                     node.send({ payload: { bandLabelA: bandNameA, bandLabelB: bandNameB } });
+                    this.status({ fill: "green", shape: "dot", text: this.server.info.name + " - " + bandNameA + "/" + bandNameB });
                 }
             });
 

@@ -2,7 +2,6 @@ const Net = require('net');
 const {PromiseSocket} = require("promise-socket");
 const EventEmitter = require('events');
 const Utils = require('./Utils');
-const { connect } = require('http2');
 
 class UpdatesEventEmitter extends EventEmitter {}
 

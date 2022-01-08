@@ -41,7 +41,7 @@ Port 1: Status for Radio A antenna.
 
 `enabled (boolean)`: same as `payload.enabled`.
 
-`topic (string)`: string that can be used to ativate this antenna using the `activate-antenna` node.
+`topic (string)`: string that can be used to activate this antenna using the `activate-antenna` node.
 
 Port 2: Status for Radio A antenna.
 
@@ -55,7 +55,7 @@ Port 2: Status for Radio A antenna.
 
 `enabled (boolean)`: same as `payload.enabled`.
 
-`topic (string)`: string that can be used to ativate this antenna using the `activate-antenna` node.
+`topic (string)`: string that can be used to activate this antenna using the `activate-antenna` node.
 
 ### Details
 

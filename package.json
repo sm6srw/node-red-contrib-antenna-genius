@@ -6,7 +6,7 @@
     "node-red"
   ],
   "scripts": {
-    "test": "mocha \"test/**/*_spec.js\"",
+    "test": "jest",
     "start": "node ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red ",
     "debug": "node --nolazy ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red"
   },
@@ -33,9 +33,12 @@
     "promise-socket": "^7.0.0"
   },
   "devDependencies": {
+    "jest": "^27.4.7",
     "mitm": "^1.7.2",
-    "mocha": "^9.1.3",
     "node-red": "^2.1.4",
     "node-red-node-test-helper": "^0.2.7"
+  },
+  "jest": {
+    "verbose": true
   }
 }

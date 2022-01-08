@@ -1,22 +1,23 @@
 const helper = require("node-red-node-test-helper");
-const activateAntennaNode = require("../antenna-genius-activate-antenna.js");
+const antennaStatusNode = require("../antenna-genius-antenna-status.js");
 const serverNode = require("../antenna-genius-server.js");
 
-const nodes = [activateAntennaNode, serverNode];
+const nodes = [antennaStatusNode, serverNode];
 
-describe('antenna-genius-activate-antenna Node', function () {
-  afterEach(function () {
+describe('antenna-genius-antenna-status Node', () => {
+  afterEach(() => {
     helper.unload();
   });
 
-  it('should be loaded', function (done) {
+  it('should be loaded', done => {
     var flow = [
       { id: "n1", type: "antenna-genius-server", name: "test name", hostname: "localhost", port: 9007, disabledColor: "Black", activeColor: "Green", selectedColor: "Blue", autoConnect: false},
-      { id: "n2", type: "antenna-genius-activate-antenna", name: "test name", server: "n1"}
+      { id: "n2", type: "antenna-genius-antenna-status", name: "test name", server: "n1", antennaNb: 6}
   ];
     helper.load(nodes, flow, function () {
       var n2 = helper.getNode("n2");
-      n2.should.have.property('name', 'test name');
+      expect(n2).toHaveProperty('name', 'test name');
+      expect(n2).toHaveProperty('antennaNumber', 6);
       done();
     });
   });

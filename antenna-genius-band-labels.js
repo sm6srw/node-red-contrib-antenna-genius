@@ -39,7 +39,7 @@ module.exports = (RED) => {
                 let bandNameA = this.server.bands[bandIndexA].band_name;
                 let bandNameB = this.server.bands[bandIndexB].band_name;
 
-                let changed = false;
+                let changed = true;
                 if (bandNameA !== this.bandNameA) {
                     changed = true;
                     this.bandNameA = bandNameA;

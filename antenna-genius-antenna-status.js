@@ -37,7 +37,8 @@ module.exports = (RED) => {
                     return;
                 }
 
-                let changed = false;
+                let changed = true;
+
                 // Selected?
                 let radioAselected = this.antennaNumber == this.server.status.portA_antenna;
                 if (radioAselected != this.radioA.selected) {

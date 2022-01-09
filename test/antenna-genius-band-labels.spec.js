@@ -35,20 +35,12 @@ describe('antenna-genius-band-labels Node', () => {
     });
   });
 
-  it('should match snapshot', done => {
-    helper.load(nodes, flow, function () {
-      var n2 = helper.getNode("n2");
-      expect(n2).toMatchSnapshot();
-      done();
-    });
-  });
 
   it('should provide no output with no input', done => {
     helper.load(nodes, flow, function () {
       var n2 = helper.getNode("n2");
       n2.server.updatesEventEmitter.emit("status");
       expect(n2.send.notCalled).toBeTruthy();
-      expect(n2).toMatchSnapshot();
       done();
     });
   });
@@ -59,7 +51,6 @@ describe('antenna-genius-band-labels Node', () => {
       n2.server.status = {portA_band: 0, portB_band: 1};
       n2.server.updatesEventEmitter.emit("status");
       expect(n2.send.notCalled).toBeTruthy();
-      expect(n2).toMatchSnapshot();
       done();
     });
   });
@@ -77,7 +68,6 @@ describe('antenna-genius-band-labels Node', () => {
           expect(msg).toHaveProperty("payload", {bandLabelA: "bandA", bandLabelB: "bandB"});
           expect(n2.send.calledOnce).toBeTruthy();
           expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name - bandA/bandB"})).toBeTruthy();
-          expect(n2).toMatchSnapshot();
           done();
         } catch(err) {
           done(err);
@@ -93,7 +83,6 @@ describe('antenna-genius-band-labels Node', () => {
       var n2 = helper.getNode("n2");
       n2.server.updatesEventEmitter.emit("connected");
       expect(n2.status.notCalled).toBeTruthy();
-      expect(n2).toMatchSnapshot();
       done();
     });
   });
@@ -104,7 +93,6 @@ describe('antenna-genius-band-labels Node', () => {
       n2.server.info = {name: "Name"};
       n2.server.updatesEventEmitter.emit("connected");
       expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name"})).toBeTruthy();
-      expect(n2).toMatchSnapshot();
       done();
     });
   });
@@ -115,7 +103,6 @@ describe('antenna-genius-band-labels Node', () => {
       n2.server.info = {name: "Name"};
       n2.server.updatesEventEmitter.emit("closed");
       expect(n2.status.calledOnceWithExactly({ fill: "red", shape: "ring", text: "disconnected"})).toBeTruthy();
-      expect(n2).toMatchSnapshot();
       done();
     });
   });

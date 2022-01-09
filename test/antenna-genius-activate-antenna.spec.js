@@ -20,7 +20,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should be loaded', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toBeDefined();
         done();
       });
@@ -28,7 +28,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should have properties', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toHaveProperty('name', 'test name');
         done();
       });
@@ -36,7 +36,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should not provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.notCalled).toBeTruthy();
         done();
@@ -45,7 +45,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name" })).toBeTruthy();
@@ -55,7 +55,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should provide disconnected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("closed");
         expect(n2.status.calledOnceWithExactly({ fill: "red", shape: "ring", text: "disconnected" })).toBeTruthy();
@@ -65,7 +65,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should provide for invalid input', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.receive({ payload: true });
         n2.on("call:status", call => {
@@ -77,7 +77,7 @@ describe('antenna-genius-activate-antenna Node', () => {
 
   it('should provide for valid input', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.receive({ payload: true, topic: "1;1" });
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name" })).toBeTruthy();

@@ -3,7 +3,7 @@ module.exports = (RED) => {
         constructor(config) {
             RED.nodes.createNode(this, config);
 
-            var node = this;
+            let node = this;
             this.antennaNumber = config.antennaNb;
             this.radioA = {
                 selected: false,

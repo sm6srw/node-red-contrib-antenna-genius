@@ -22,7 +22,7 @@ module.exports = (RED) => {
             this.bands = [];
             this.interval = null;
             this.timer = null;
-            this.refresh = 0;
+            this.refresh = -1;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
             this.updatesEventEmitter.setMaxListeners(0);
@@ -66,7 +66,7 @@ module.exports = (RED) => {
                 packet = await promiseClient.read();
                 this.info = Utils.decode(packet);
 
-                var numAntennas = 8 * this.status.stackReach;
+                let numAntennas = 8 * this.status.stackReach;
                 for (let index = 1; index <= numAntennas; ++index) {
                     let command = Utils.encode(0, 0, 412, 0, index.toString());
                     await promiseClient.write(command);

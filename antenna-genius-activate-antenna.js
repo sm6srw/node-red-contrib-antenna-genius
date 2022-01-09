@@ -5,7 +5,7 @@ module.exports = (RED) => {
         constructor(config) {
             RED.nodes.createNode(this, config);
 
-            var node = this;
+            let node = this;
             this.bandNameA = "";
             this.bandNameB = "";
             this.server = RED.nodes.getNode(config.server);

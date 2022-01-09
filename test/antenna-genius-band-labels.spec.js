@@ -21,7 +21,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should be loaded', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toBeDefined();
         done();
       });
@@ -29,7 +29,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should have properties', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toHaveProperty('name', 'test name');
         done();
       });
@@ -38,7 +38,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should provide no output with no input', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.updatesEventEmitter.emit("status", false);
         expect(n2.send.notCalled).toBeTruthy();
         done();
@@ -47,7 +47,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should provide no output with no band definitions', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.status = { portA_band: 0, portB_band: 1 };
         n2.server.updatesEventEmitter.emit("status", false);
         expect(n2.send.notCalled).toBeTruthy();
@@ -57,12 +57,12 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should provide output', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.status = { portA_band: 0, portB_band: 1 };
         n2.server.bands = [{ band_name: "bandA" }, { band_name: "bandB" }];
         n2.server.info = { name: "Name" };
 
-        var n3 = helper.getNode("n3");
+        let n3 = helper.getNode("n3");
         n3.on("input", (msg) => {
             try {
               expect(msg).toHaveProperty("payload", { bandLabelA: "bandA", bandLabelB: "bandB" });
@@ -80,7 +80,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should not provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.notCalled).toBeTruthy();
         done();
@@ -89,7 +89,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name" })).toBeTruthy();
@@ -99,7 +99,7 @@ describe('antenna-genius-band-labels Node', () => {
 
   it('should provide disconnected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("closed");
         expect(n2.status.calledOnceWithExactly({ fill: "red", shape: "ring", text: "disconnected" })).toBeTruthy();

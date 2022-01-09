@@ -18,7 +18,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should be loaded', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toBeDefined();
         done();
       });
@@ -26,7 +26,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should have properties', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         expect(n2).toHaveProperty('name', 'test name');
         expect(n2).toHaveProperty('antennaNumber', 2);
         done();
@@ -35,7 +35,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should not provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.notCalled).toBeTruthy();
         done();
@@ -44,7 +44,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should provide connected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("connected");
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name" })).toBeTruthy();
@@ -54,7 +54,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should provide disconnected status', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.updatesEventEmitter.emit("closed");
         expect(n2.status.calledOnceWithExactly({ fill: "red", shape: "ring", text: "disconnected" })).toBeTruthy();
@@ -64,7 +64,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should provide A port output with valid input', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.status = { portA_antenna: 1, portA_band: 0, portB_antenna: 2, portB_band: 1 };
         n2.server.antennas = [{ antenna_name: "Antenna0", antenna_bands: [1, 1] }, { antenna_name: "Antenna1", antenna_bands: [1, 1] }];
@@ -72,7 +72,7 @@ describe('antenna-genius-antenna-status Node', () => {
         expect(n2.send.calledOnce).toBeTruthy();
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name - Antenna1" })).toBeTruthy();
 
-        var n3 = helper.getNode("n3");
+        let n3 = helper.getNode("n3");
         n3.on("input", (msg) => {
             try {
               expect(msg).toHaveProperty("payload", {
@@ -93,7 +93,7 @@ describe('antenna-genius-antenna-status Node', () => {
 
   it('should provide B port output with valid input', done => {
     helper.load(nodes, flow, () => {
-        var n2 = helper.getNode("n2");
+        let n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.server.status = { portA_antenna: 1, portA_band: 0, portB_antenna: 2, portB_band: 1 };
         n2.server.antennas = [{ antenna_name: "Antenna0", antenna_bands: [1, 1] }, { antenna_name: "Antenna1", antenna_bands: [1, 1] }];
@@ -101,7 +101,7 @@ describe('antenna-genius-antenna-status Node', () => {
         expect(n2.send.calledOnce).toBeTruthy();
         expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name - Antenna1" })).toBeTruthy();
 
-        var n4 = helper.getNode("n4");
+        let n4 = helper.getNode("n4");
         n4.on("input", (msg) => {
             try {
               expect(msg).toHaveProperty("payload", {

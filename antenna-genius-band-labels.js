@@ -9,7 +9,9 @@ module.exports = (RED) => {
             this.server = RED.nodes.getNode(config.server);
 
             this.server.updatesEventEmitter.on("connected", () => {
-                this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                if(this.server.info.name) {
+                    this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                }
             });
 
             this.server.updatesEventEmitter.on('closed', () => {
@@ -19,6 +21,20 @@ module.exports = (RED) => {
             this.server.updatesEventEmitter.on("status", () => {
                 let bandIndexA = this.server.status.portA_band;
                 let bandIndexB = this.server.status.portB_band;
+
+                if(bandIndexA === undefined || bandIndexB === undefined) {
+                    return;
+                }
+
+                if(bandIndexA < 0 || bandIndexA >= this.server.bands.length)
+                {
+                    return;
+                }
+
+                if(bandIndexB < 0 || bandIndexB >= this.server.bands.length)
+                {
+                    return;
+                }
 
                 let bandNameA = this.server.bands[bandIndexA].band_name;
                 let bandNameB = this.server.bands[bandIndexB].band_name;

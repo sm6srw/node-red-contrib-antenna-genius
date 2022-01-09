@@ -32,6 +32,7 @@ module.exports = (RED) => {
                 }
                 else {
                     this.status({ fill: "red", shape: "ring", text: "topic is not set" });
+                    this.server.forceUpdate();
                 }
                 if(done) {
                     done();

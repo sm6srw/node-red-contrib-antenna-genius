@@ -100,6 +100,7 @@ module.exports = (RED) => {
                     this.client.write(command);
                 }, 400);
 
+                this.forceUpdate();
                 this.updatesEventEmitter.emit("connected");
             })
 
@@ -121,6 +122,10 @@ module.exports = (RED) => {
             if(this.autoConnect && !this.connected & !this.client.connecting) {
                 this.client.connect(this.port, this.host);
             }
+        }
+
+        forceUpdate() {
+            this.refresh = -1;
         }
     }
 

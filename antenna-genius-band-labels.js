@@ -36,8 +36,8 @@ module.exports = (RED) => {
                     return;
                 }
 
-                let bandNameA = this.server.bands[bandIndexA].band_name;
-                let bandNameB = this.server.bands[bandIndexB].band_name;
+                let bandNameA = this.server.bands[bandIndexA].name;
+                let bandNameB = this.server.bands[bandIndexB].name;
 
                 let changed = forceUpdate;
                 if (bandNameA !== this.bandNameA) {

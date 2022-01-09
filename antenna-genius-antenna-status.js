@@ -53,20 +53,20 @@ module.exports = (RED) => {
                 }
 
                 // Enabled?
-                let radioAenabled = this.server.antennas[this.antennaNumber - 1].antenna_bands[this.server.status.portA_band] == 1;
+                let radioAenabled = this.server.antennas[this.antennaNumber - 1].bands[this.server.status.portA_band] == 1;
                 if (radioAenabled != this.radioA.enabled) {
                     changed = true;
                     this.radioA.enabled = radioAenabled;
                 }
 
-                let radioBenabled = this.server.antennas[this.antennaNumber - 1].antenna_bands[this.server.status.portB_band] == 1;
+                let radioBenabled = this.server.antennas[this.antennaNumber - 1].bands[this.server.status.portB_band] == 1;
                 if (radioBenabled != this.radioB.enabled) {
                     changed = true;
                     this.radioB.enabled = radioBenabled;
                 }
 
                 // Get name
-                let name = this.server.antennas[this.antennaNumber - 1].antenna_name;
+                let name = this.server.antennas[this.antennaNumber - 1].name;
                 if (this.radioA.name !== name) {
                     changed = true;
                     this.radioA.name = this.radioB.name = name;

@@ -59,7 +59,7 @@ describe('antenna-genius-band-labels Node', () => {
     helper.load(nodes, flow, () => {
         let n2 = helper.getNode("n2");
         n2.server.status = { portA_band: 0, portB_band: 1 };
-        n2.server.bands = [{ band_name: "bandA" }, { band_name: "bandB" }];
+        n2.server.bands = [{ name: "bandA" }, { name: "bandB" }];
         n2.server.info = { name: "Name" };
 
         let n3 = helper.getNode("n3");

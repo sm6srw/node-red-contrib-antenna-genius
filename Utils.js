@@ -1,4 +1,4 @@
-const encode = (protocol, method, command, revision, payload) => {
+const encode = (protocol = 0, method = 0, command = 0, revision = 0, payload = "") => {
     // !llll!bbbbbb!payload
     // llll id the length, in hex of bit header, bbbbbb, and the payload, based on zero. 
     // bbbbbb
@@ -8,6 +8,7 @@ const encode = (protocol, method, command, revision, payload) => {
     // gscph.revision = 0x00007c // 5 bits Command revision
     // gscph.erro     = 0x000003 // 2 bits 0 = No error, 1 = Command error, 2 = Protocol error, 3 = Not defined
     //
+
     let a;
     let bitheader;
 
@@ -27,7 +28,7 @@ const encode = (protocol, method, command, revision, payload) => {
     return ret;
 };
 
-const decodeheader = (msg) => {
+const decodeheader = (msg = "!0007!000000!") => {
     //Perhaps some code to verify that we acctually got the initial '!', if not discard. 
     //Same for the length, verify length in the header to the actual recived length, if no match discard. 
     //
@@ -76,7 +77,7 @@ const decode = (msg) => {
 const decode24 = (data) => {
     let msg = {};
 
-    msg.indentification = parseInt(data[0]);
+    msg.identification = parseInt(data[0]);
     msg.group = parseInt(data[1]);
     msg.name = data[2];
 
@@ -90,10 +91,10 @@ const decode82 = (data) => {
     // 2	band.name	string	Band name (20 characters maximum)
     // 3	band.cutoff.lower	int	Lower cutoff frequency (0 - 2147483647 hertz)
     // 4	band.cutoff.upper	int	Upper cutoff frequency (0 - 2147483647 hertz)
-    msg.band_index = parseInt(data[0]);
-    msg.band_name= data[1];
-    msg.band_cutoff_lower = parseInt(data[2]);
-    msg.band_cutoff_upper = parseInt(data[3]);
+    msg.index = parseInt(data[0]);
+    msg.name = data[1];
+    msg.cutoff_lower = parseInt(data[2]);
+    msg.cutoff_upper = parseInt(data[3]);
 
     return msg;
 };
@@ -125,27 +126,27 @@ const decode412 = (data) => {
     // 1	antenna.name	string	Antenna name (20 characters maximum)
     // 2	antenna.mode	int	Antenna mode (1 = RX only, 2 = TX only, 3 = RX and TX)
     // 3	antenna.bands	string	Hex representation of bands bitfield (2 bytes)
-    msg.antenna_index = parseInt(data[0]);
-    msg.antenna_name= data[1];
-    msg.antenna_mode = parseInt(data[2]);
+    msg.index = parseInt(data[0]);
+    msg.name = data[1];
+    msg.mode = parseInt(data[2]);
     let parameters = parseInt(data[3],16);
-    msg.antenna_bands = [];
-    msg.antenna_bands.push(1 & (parameters));
-    msg.antenna_bands.push(1 & (parameters >> 1));
-    msg.antenna_bands.push(1 & (parameters >> 2));
-    msg.antenna_bands.push(1 & (parameters >> 3));
-    msg.antenna_bands.push(1 & (parameters >> 4));
-    msg.antenna_bands.push(1 & (parameters >> 5));
-    msg.antenna_bands.push(1 & (parameters >> 6));
-    msg.antenna_bands.push(1 & (parameters >> 7));
-    msg.antenna_bands.push(1 & (parameters >> 8));
-    msg.antenna_bands.push(1 & (parameters >> 9));
-    msg.antenna_bands.push(1 & (parameters >> 10));
-    msg.antenna_bands.push(1 & (parameters >> 11));
-    msg.antenna_bands.push(1 & (parameters >> 12));
-    msg.antenna_bands.push(1 & (parameters >> 13));
-    msg.antenna_bands.push(1 & (parameters >> 14));
-    msg.antenna_bands.push(1 & (parameters >> 15));
+    msg.bands = [];
+    msg.bands.push(1 & (parameters));
+    msg.bands.push(1 & (parameters >> 1));
+    msg.bands.push(1 & (parameters >> 2));
+    msg.bands.push(1 & (parameters >> 3));
+    msg.bands.push(1 & (parameters >> 4));
+    msg.bands.push(1 & (parameters >> 5));
+    msg.bands.push(1 & (parameters >> 6));
+    msg.bands.push(1 & (parameters >> 7));
+    msg.bands.push(1 & (parameters >> 8));
+    msg.bands.push(1 & (parameters >> 9));
+    msg.bands.push(1 & (parameters >> 10));
+    msg.bands.push(1 & (parameters >> 11));
+    msg.bands.push(1 & (parameters >> 12));
+    msg.bands.push(1 & (parameters >> 13));
+    msg.bands.push(1 & (parameters >> 14));
+    msg.bands.push(1 & (parameters >> 15));
 
     return msg;
 }

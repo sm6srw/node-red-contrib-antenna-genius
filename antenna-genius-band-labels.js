@@ -18,7 +18,7 @@ module.exports = (RED) => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 
-            this.server.updatesEventEmitter.on("status", () => {
+            this.server.updatesEventEmitter.on("status", (forceUpdate) => {
                 let bandIndexA = this.server.status.portA_band;
                 let bandIndexB = this.server.status.portB_band;
 
@@ -39,7 +39,7 @@ module.exports = (RED) => {
                 let bandNameA = this.server.bands[bandIndexA].band_name;
                 let bandNameB = this.server.bands[bandIndexB].band_name;
 
-                let changed = true;
+                let changed = forceUpdate;
                 if (bandNameA !== this.bandNameA) {
                     changed = true;
                     this.bandNameA = bandNameA;

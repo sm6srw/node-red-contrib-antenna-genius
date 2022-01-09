@@ -39,7 +39,7 @@ describe('antenna-genius-band-labels Node', () => {
   it('should provide no output with no input', done => {
     helper.load(nodes, flow, () => {
         var n2 = helper.getNode("n2");
-        n2.server.updatesEventEmitter.emit("status");
+        n2.server.updatesEventEmitter.emit("status", false);
         expect(n2.send.notCalled).toBeTruthy();
         done();
       });
@@ -49,7 +49,7 @@ describe('antenna-genius-band-labels Node', () => {
     helper.load(nodes, flow, () => {
         var n2 = helper.getNode("n2");
         n2.server.status = { portA_band: 0, portB_band: 1 };
-        n2.server.updatesEventEmitter.emit("status");
+        n2.server.updatesEventEmitter.emit("status", false);
         expect(n2.send.notCalled).toBeTruthy();
         done();
       });
@@ -74,7 +74,7 @@ describe('antenna-genius-band-labels Node', () => {
             }
           });
 
-        n2.server.updatesEventEmitter.emit("status");
+        n2.server.updatesEventEmitter.emit("status", false);
       });
   });
 

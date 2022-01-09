@@ -29,7 +29,7 @@ module.exports = (RED) => {
                 this.status({ fill: "red", shape: "ring", text: "disconnected" });
             });
 
-            this.server.updatesEventEmitter.on("status", () => {
+            this.server.updatesEventEmitter.on("status", (forceUpdate) => {
 
                 let maxNumberOfAntennas = this.server.status.stackReach * 8;
                 if(this.antennaNumber < 1 || this.antennaNumber > maxNumberOfAntennas || this.antennaNumber > this.server.antennas.length) {
@@ -37,7 +37,7 @@ module.exports = (RED) => {
                     return;
                 }
 
-                let changed = true;
+                let changed = forceUpdate;
 
                 // Selected?
                 let radioAselected = this.antennaNumber == this.server.status.portA_antenna;

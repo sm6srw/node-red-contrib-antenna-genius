@@ -22,6 +22,7 @@ module.exports = (RED) => {
             this.bands = [];
             this.interval = null;
             this.timer = null;
+            this.refresh = 0;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
             this.updatesEventEmitter.setMaxListeners(0);
@@ -88,7 +89,8 @@ module.exports = (RED) => {
                     let decoded = Utils.decode(packet);
                     if(decoded.command == 401) {
                         this.status = { ...this.status, ...Utils.decode(packet) };
-                        this.updatesEventEmitter.emit("status");
+                        this.refresh = (this.refresh + 1) % 1500;
+                        this.updatesEventEmitter.emit("status", this.refresh == 0);
                     }
                 });
 

@@ -22,6 +22,10 @@ module.exports = (RED) => {
 
             node.on('input', (msg, send, done) => {
                 if(msg.topic) {
+                    if(this.server.info.name) {
+                        this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                    }
+    
                     let command = Utils.encode(0, 0, 415, 0, msg.topic);
 
                     this.server.client.write(command);

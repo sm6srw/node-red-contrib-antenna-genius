@@ -80,6 +80,7 @@ describe('antenna-genius-activate-antenna Node', () => {
         var n2 = helper.getNode("n2");
         n2.server.info = { name: "Name" };
         n2.receive({ payload: true, topic: "1;1" });
+        expect(n2.status.calledOnceWithExactly({ fill: "green", shape: "dot", text: "Name" })).toBeTruthy();
         done();
       });
   });

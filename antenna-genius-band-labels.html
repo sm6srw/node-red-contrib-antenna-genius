@@ -1,16 +1,16 @@
 <script type="text/javascript">
-    RED.nodes.registerType('antenna-genius-band-labels',{
-        category: 'antenna genius',
-        color: '#FFF0F0',
+    RED.nodes.registerType("antenna-genius-band-labels", {
+        category: "antenna genius",
+        color: "#FFF0F0",
         defaults: {
-            name: {value:""},
-            server: {value:"", type:"antenna-genius-server"},
+            name: { value: "" },
+            server: { value: "", type: "antenna-genius-server" },
         },
-        inputs:0,
-        outputs:1,
+        inputs: 0,
+        outputs: 1,
         icon: "font-awesome/fa-info",
-        label: function() {
-            return this.name||"antenna-genius-band-labels";
+        label: function () {
+            return this.name || "antenna-genius-band-labels";
         },
         paletteLabel: "band-labels",
         outputLabels: ["Band Labels"],
@@ -20,11 +20,13 @@
 <script type="text/html" data-template-name="antenna-genius-band-labels">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name" placeholder="Name" />
     </div>
     <div class="form-row">
-        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
-        <input type="text" id="node-input-server" placeholder="Server">
+        <label for="node-input-server"
+            ><i class="fa fa-server"></i> Server</label
+        >
+        <input type="text" id="node-input-server" placeholder="Server" />
     </div>
 </script>
 

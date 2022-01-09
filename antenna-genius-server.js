@@ -1,7 +1,7 @@
-const Net = require('net');
-const {PromiseSocket} = require("promise-socket");
-const EventEmitter = require('events');
-const Utils = require('./Utils');
+const Net = require("net");
+const { PromiseSocket } = require("promise-socket");
+const EventEmitter = require("events");
+const Utils = require("./Utils");
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -30,30 +30,34 @@ module.exports = (RED) => {
             this.client = new Net.Socket();
             this.connected = false;
 
-            this.client.on('close', () => {
-                this.log('TCP connection disconnected with the server.');
+            this.client.on("close", () => {
+                this.log("TCP connection disconnected with the server.");
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
 
-                if(this.updatesEventEmitter.listenerCount('closed') == 0) {
-                    this.log('Stop retrying. No nodes are refering this connection anymore.');
+                if (this.updatesEventEmitter.listenerCount("closed") == 0) {
+                    this.log(
+                        "Stop retrying. No nodes are refering this connection anymore."
+                    );
                     return;
                 }
 
-                if(this.autoConnect) {
-                    this.log('TCP connection failed with the server. Will try to reconnect in 5 seconds');
+                if (this.autoConnect) {
+                    this.log(
+                        "TCP connection failed with the server. Will try to reconnect in 5 seconds"
+                    );
                     this.timer = setTimeout(() => {
-                        this.log('Reconnecting...');
+                        this.log("Reconnecting...");
                         this.connect();
                     }, 5000);
                     this.updatesEventEmitter.emit("closed");
                 }
             });
 
-            this.client.on('connect', async () => {
-                this.log('TCP connection established with the server.');
+            this.client.on("connect", async () => {
+                this.log("TCP connection established with the server.");
                 this.connected = true;
-    
+
                 const promiseClient = new PromiseSocket(this.client);
 
                 let command = Utils.encode(0, 0, 401, 0, "");
@@ -85,12 +89,18 @@ module.exports = (RED) => {
                 }
                 this.updatesEventEmitter.emit("bands");
 
-                this.client.on('data', (packet) => {
+                this.client.on("data", (packet) => {
                     let decoded = Utils.decode(packet);
-                    if(decoded.command == 401) {
-                        this.status = { ...this.status, ...Utils.decode(packet) };
+                    if (decoded.command == 401) {
+                        this.status = {
+                            ...this.status,
+                            ...Utils.decode(packet),
+                        };
                         this.refresh = (this.refresh + 1) % 1500;
-                        this.updatesEventEmitter.emit("status", this.refresh == 0);
+                        this.updatesEventEmitter.emit(
+                            "status",
+                            this.refresh == 0
+                        );
                     }
                 });
 
@@ -102,13 +112,13 @@ module.exports = (RED) => {
 
                 this.forceUpdate();
                 this.updatesEventEmitter.emit("connected");
-            })
+            });
 
-            this.client.on('error', (err) => {
+            this.client.on("error", (err) => {
                 this.warn(err);
             });
 
-            this.on('close', (done) => {
+            this.on("close", (done) => {
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
                 this.autoConnect = false;
@@ -120,7 +130,7 @@ module.exports = (RED) => {
         }
 
         connect() {
-            if(this.autoConnect && !this.connected & !this.client.connecting) {
+            if (this.autoConnect && !this.connected & !this.client.connecting) {
                 this.client.connect(this.port, this.host);
             }
         }
@@ -130,5 +140,5 @@ module.exports = (RED) => {
         }
     }
 
-    RED.nodes.registerType("antenna-genius-server",AntennaGeniusServerNode);
-}
+    RED.nodes.registerType("antenna-genius-server", AntennaGeniusServerNode);
+};

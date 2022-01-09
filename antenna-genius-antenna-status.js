@@ -9,57 +9,80 @@ module.exports = (RED) => {
                 selected: false,
                 enabled: false,
                 name: "",
-                background: ""
+                background: "",
             };
             this.radioB = {
                 selected: false,
                 enabled: false,
                 name: "",
-                background: ""
+                background: "",
             };
             this.server = RED.nodes.getNode(config.server);
 
             this.server.updatesEventEmitter.on("connected", () => {
-                if(this.server.info.name ) {
-                    this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                if (this.server.info.name) {
+                    this.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: this.server.info.name,
+                    });
                 }
             });
 
-            this.server.updatesEventEmitter.on('closed', () => {
-                this.status({ fill: "red", shape: "ring", text: "disconnected" });
+            this.server.updatesEventEmitter.on("closed", () => {
+                this.status({
+                    fill: "red",
+                    shape: "ring",
+                    text: "disconnected",
+                });
             });
 
             this.server.updatesEventEmitter.on("status", (forceUpdate) => {
-
                 let maxNumberOfAntennas = this.server.status.stackReach * 8;
-                if(this.antennaNumber < 1 || this.antennaNumber > maxNumberOfAntennas || this.antennaNumber > this.server.antennas.length) {
-                    this.status({ fill: "red", shape: "ring", text: "antenna number is out of range" });
+                if (
+                    this.antennaNumber < 1 ||
+                    this.antennaNumber > maxNumberOfAntennas ||
+                    this.antennaNumber > this.server.antennas.length
+                ) {
+                    this.status({
+                        fill: "red",
+                        shape: "ring",
+                        text: "antenna number is out of range",
+                    });
                     return;
                 }
 
                 let changed = forceUpdate;
 
                 // Selected?
-                let radioAselected = this.antennaNumber == this.server.status.portA_antenna;
+                let radioAselected =
+                    this.antennaNumber == this.server.status.portA_antenna;
                 if (radioAselected != this.radioA.selected) {
                     changed = true;
                     this.radioA.selected = radioAselected;
                 }
 
-                let radioBselected = this.antennaNumber == this.server.status.portB_antenna;
+                let radioBselected =
+                    this.antennaNumber == this.server.status.portB_antenna;
                 if (radioBselected != this.radioB.selected) {
                     changed = true;
                     this.radioB.selected = radioBselected;
                 }
 
                 // Enabled?
-                let radioAenabled = this.server.antennas[this.antennaNumber - 1].bands[this.server.status.portA_band] == 1;
+                let radioAenabled =
+                    this.server.antennas[this.antennaNumber - 1].bands[
+                        this.server.status.portA_band
+                    ] == 1;
                 if (radioAenabled != this.radioA.enabled) {
                     changed = true;
                     this.radioA.enabled = radioAenabled;
                 }
 
-                let radioBenabled = this.server.antennas[this.antennaNumber - 1].bands[this.server.status.portB_band] == 1;
+                let radioBenabled =
+                    this.server.antennas[this.antennaNumber - 1].bands[
+                        this.server.status.portB_band
+                    ] == 1;
                 if (radioBenabled != this.radioB.enabled) {
                     changed = true;
                     this.radioB.enabled = radioBenabled;
@@ -70,30 +93,30 @@ module.exports = (RED) => {
                 if (this.radioA.name !== name) {
                     changed = true;
                     this.radioA.name = this.radioB.name = name;
-                    this.status({ fill: "green", shape: "dot", text: this.server.info.name + " - " + name});
+                    this.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: this.server.info.name + " - " + name,
+                    });
                 }
 
                 if (radioAenabled) {
                     if (radioAselected) {
                         this.radioA.background = this.server.selectedColor;
-                    }
-                    else {
+                    } else {
                         this.radioA.background = this.server.activeColor;
                     }
-                }
-                else {
+                } else {
                     this.radioA.background = this.server.disabledColor;
                 }
 
                 if (radioBenabled) {
                     if (radioBselected) {
                         this.radioB.background = this.server.selectedColor;
-                    }
-                    else {
+                    } else {
                         this.radioB.background = this.server.activeColor;
                     }
-                }
-                else {
+                } else {
                     this.radioB.background = this.server.disabledColor;
                 }
 
@@ -101,12 +124,26 @@ module.exports = (RED) => {
                 let radioBTopic = "2;" + this.antennaNumber;
 
                 if (changed) {
-                    node.send([{ payload: this.radioA, enabled: this.radioA.enabled, topic: radioATopic }, { payload: this.radioB, enabled: this.radioB.enabled, topic: radioBTopic }]);
+                    node.send([
+                        {
+                            payload: this.radioA,
+                            enabled: this.radioA.enabled,
+                            topic: radioATopic,
+                        },
+                        {
+                            payload: this.radioB,
+                            enabled: this.radioB.enabled,
+                            topic: radioBTopic,
+                        },
+                    ]);
                 }
             });
 
             this.server.connect();
         }
     }
-    RED.nodes.registerType("antenna-genius-antenna-status", AntennaGeniusAntennaStatus);
-}
+    RED.nodes.registerType(
+        "antenna-genius-antenna-status",
+        AntennaGeniusAntennaStatus
+    );
+};

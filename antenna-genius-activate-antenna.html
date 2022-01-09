@@ -1,16 +1,16 @@
 <script type="text/javascript">
-    RED.nodes.registerType('antenna-genius-activate-antenna',{
-        category: 'antenna genius',
-        color: '#FFF0F0',
+    RED.nodes.registerType("antenna-genius-activate-antenna", {
+        category: "antenna genius",
+        color: "#FFF0F0",
         defaults: {
-            name: {value:""},
-            server: {value:"", type:"antenna-genius-server"},
+            name: { value: "" },
+            server: { value: "", type: "antenna-genius-server" },
         },
-        inputs:1,
-        outputs:0,
+        inputs: 1,
+        outputs: 0,
         icon: "font-awesome/fa-sliders",
-        label: function() {
-            return this.name||"antenna-genius-activate-antenna";
+        label: function () {
+            return this.name || "antenna-genius-activate-antenna";
         },
         paletteLabel: "activate-antenna",
         inputLabels: "Set antenna defined in topic as active",
@@ -20,11 +20,13 @@
 <script type="text/html" data-template-name="antenna-genius-activate-antenna">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name" placeholder="Name" />
     </div>
     <div class="form-row">
-        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
-        <input type="text" id="node-input-server" placeholder="Server">
+        <label for="node-input-server"
+            ><i class="fa fa-server"></i> Server</label
+        >
+        <input type="text" id="node-input-server" placeholder="Server" />
     </div>
 </script>
 
@@ -42,5 +44,4 @@ Set the antenna defined in topic as active.
 ### Details
 
 See the `antenna-status` node for more information.
-
 </script>

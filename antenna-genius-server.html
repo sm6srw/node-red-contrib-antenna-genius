@@ -1,41 +1,55 @@
 <script type="text/javascript">
-    RED.nodes.registerType('antenna-genius-server',{
-        category: 'config',
-        color: '#FFF0F0',
+    RED.nodes.registerType("antenna-genius-server", {
+        category: "config",
+        color: "#FFF0F0",
         defaults: {
-            host: {value:"localhost",required:true},
-            port: {value:9007,required:true,validate:RED.validators.number()},
-            disabledColor: {value:"Black", required:true},
-            activeColor: {value:"Green", required:true},
-            selectedColor: {value:"Blue", required:true},
-            autoConnect: {value:true},
+            host: { value: "localhost", required: true },
+            port: {
+                value: 9007,
+                required: true,
+                validate: RED.validators.number(),
+            },
+            disabledColor: { value: "Black", required: true },
+            activeColor: { value: "Green", required: true },
+            selectedColor: { value: "Blue", required: true },
+            autoConnect: { value: true },
         },
-        label: function() {
+        label: function () {
             return "antenna genius at " + this.host + ":" + this.port;
-        }
+        },
     });
 </script>
 
 <script type="text/html" data-template-name="antenna-genius-server">
     <div class="form-row">
-        <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
-        <input type="text" id="node-config-input-host">
+        <label for="node-config-input-host"
+            ><i class="fa fa-bookmark"></i> Host</label
+        >
+        <input type="text" id="node-config-input-host" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
-        <input type="text" id="node-config-input-port">
+        <label for="node-config-input-port"
+            ><i class="fa fa-bookmark"></i> Port</label
+        >
+        <input type="text" id="node-config-input-port" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-disabledColor"><i class="fa fa-bookmark"></i> Disabled Background</label>
-        <input type="text" id="node-config-input-disabledColor">
+        <label for="node-config-input-disabledColor"
+            ><i class="fa fa-bookmark"></i> Disabled Background</label
+        >
+        <input type="text" id="node-config-input-disabledColor" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-activeColor"><i class="fa fa-bookmark"></i> Active Background</label>
-        <input type="text" id="node-config-input-activeColor">
+        <label for="node-config-input-activeColor"
+            ><i class="fa fa-bookmark"></i> Active Background</label
+        >
+        <input type="text" id="node-config-input-activeColor" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-selectedColor"><i class="fa fa-bookmark"></i> Selected Background</label>
-        <input type="text" id="node-config-input-selectedColor">
+        <label for="node-config-input-selectedColor"
+            ><i class="fa fa-bookmark"></i> Selected Background</label
+        >
+        <input type="text" id="node-config-input-selectedColor" />
     </div>
 </script>
 

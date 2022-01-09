@@ -1,6 +1,12 @@
-const encode = (protocol = 0, method = 0, command = 0, revision = 0, payload = "") => {
+const encode = (
+    protocol = 0,
+    method = 0,
+    command = 0,
+    revision = 0,
+    payload = ""
+) => {
     // !llll!bbbbbb!payload
-    // llll id the length, in hex of bit header, bbbbbb, and the payload, based on zero. 
+    // llll id the length, in hex of bit header, bbbbbb, and the payload, based on zero.
     // bbbbbb
     // gscph.protocol = 0xe00000 // 3 bits Protocol version
     // gscph.method   = 0x180000 // 2 bits 0 = Unicast request, 1 = Unicast response, 2 = Broadcast request, 3 = Broadcast response
@@ -21,43 +27,53 @@ const encode = (protocol = 0, method = 0, command = 0, revision = 0, payload = "
     //node.warn("dbg01: a ="+a);
     a += revision << 2;
     //node.warn("dbg01: a ="+a.toString(16));
-    bitheader = (a.toString(16)).padStart(6,"0");
-    commandlength = ((bitheader.length + payload.length + 1).toString(16)).padStart(4,"0");
+    bitheader = a.toString(16).padStart(6, "0");
+    commandlength = (bitheader.length + payload.length + 1)
+        .toString(16)
+        .padStart(4, "0");
     let ret = "!" + commandlength + "!" + bitheader + "!" + payload;
 
     return ret;
 };
 
 const decodeheader = (msg = "!0007!000000!") => {
-    //Perhaps some code to verify that we acctually got the initial '!', if not discard. 
-    //Same for the length, verify length in the header to the actual recived length, if no match discard. 
+    //Perhaps some code to verify that we acctually got the initial '!', if not discard.
+    //Same for the length, verify length in the header to the actual recived length, if no match discard.
     //
-    msg = msg.toString('utf8');
-    let response = msg.substring(1).split("!"); //skip first !  
+    msg = msg.toString("utf8");
+    let response = msg.substring(1).split("!"); //skip first !
 
     // Header masks
-    const gscph_protocol_mask = 0xe00000 // 3 bits Protocol version
-    const gscph_method_mask = 0x180000 // 2 bits 0 = Unicast request, 1 = Unicast response, 2 = Broadcast request, 3 = Broadcast response
-    const gscph_command_mask = 0x07FF80 // 12 bits Command number
-    const gscph_revision_mask = 0x00007c // 5 bits Command revision
-    const gscph_error_mask = 0x000003 // 2 bits 0 = No error, 1 = Command error, 2 = Protocol error, 3 = Not defined
+    const gscph_protocol_mask = 0xe00000; // 3 bits Protocol version
+    const gscph_method_mask = 0x180000; // 2 bits 0 = Unicast request, 1 = Unicast response, 2 = Broadcast request, 3 = Broadcast response
+    const gscph_command_mask = 0x07ff80; // 12 bits Command number
+    const gscph_revision_mask = 0x00007c; // 5 bits Command revision
+    const gscph_error_mask = 0x000003; // 2 bits 0 = No error, 1 = Command error, 2 = Protocol error, 3 = Not defined
 
-    let error = gscph_error_mask & parseInt(response[1],16);
-    let revision = (gscph_revision_mask & parseInt(response[1],16)) >> 2;
-    let command = (gscph_command_mask & parseInt(response[1],16)) >> 7;
-    let method = (gscph_method_mask & parseInt(response[1],16)) >> 19;
-    let protocol = (gscph_protocol_mask & parseInt(response[1],16)) >> 21;
+    let error = gscph_error_mask & parseInt(response[1], 16);
+    let revision = (gscph_revision_mask & parseInt(response[1], 16)) >> 2;
+    let command = (gscph_command_mask & parseInt(response[1], 16)) >> 7;
+    let method = (gscph_method_mask & parseInt(response[1], 16)) >> 19;
+    let protocol = (gscph_protocol_mask & parseInt(response[1], 16)) >> 21;
     let length = response[0];
-    let payload = response[2]
+    let payload = response[2];
 
-    return {error: error, revision: revision, command: command, method: method, protocol: protocol, length: length, payload: payload}
+    return {
+        error: error,
+        revision: revision,
+        command: command,
+        method: method,
+        protocol: protocol,
+        length: length,
+        payload: payload,
+    };
 };
 
 const decode = (msg) => {
     const header = decodeheader(msg);
     const params = header.payload.split(";");
     let data = {};
-    switch(header.command) {
+    switch (header.command) {
         case 24:
             data = decode24(params);
             break;
@@ -71,7 +87,7 @@ const decode = (msg) => {
             data = decode412(params);
             break;
     }
-    return {...header, ...data};
+    return { ...header, ...data };
 };
 
 const decode24 = (data) => {
@@ -107,13 +123,13 @@ const decode401 = (data) => {
     msg.portA_inhibit = parseInt(data[2]);
     msg.portA_antenna = parseInt(data[3]);
     msg.portA_profile = parseInt(data[4]);
-    msg.portA_tx = parseInt(data[5]);		
+    msg.portA_tx = parseInt(data[5]);
     msg.portB_mode = parseInt(data[6]);
     msg.portB_band = parseInt(data[7]);
     msg.portB_inhibit = parseInt(data[8]);
     msg.portB_antenna = parseInt(data[9]);
     msg.portB_profile = parseInt(data[10]);
-    msg.portB_tx = parseInt(data[11]);		
+    msg.portB_tx = parseInt(data[11]);
     msg.stackReach = parseInt(data[12]);
 
     return msg;
@@ -129,9 +145,9 @@ const decode412 = (data) => {
     msg.index = parseInt(data[0]);
     msg.name = data[1];
     msg.mode = parseInt(data[2]);
-    let parameters = parseInt(data[3],16);
+    let parameters = parseInt(data[3], 16);
     msg.bands = [];
-    msg.bands.push(1 & (parameters));
+    msg.bands.push(1 & parameters);
     msg.bands.push(1 & (parameters >> 1));
     msg.bands.push(1 & (parameters >> 2));
     msg.bands.push(1 & (parameters >> 3));
@@ -149,7 +165,7 @@ const decode412 = (data) => {
     msg.bands.push(1 & (parameters >> 15));
 
     return msg;
-}
+};
 
 exports.encode = encode;
 exports.decode = decode;

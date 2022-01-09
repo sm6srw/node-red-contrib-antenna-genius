@@ -9,30 +9,36 @@ module.exports = (RED) => {
             this.server = RED.nodes.getNode(config.server);
 
             this.server.updatesEventEmitter.on("connected", () => {
-                if(this.server.info.name) {
-                    this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                if (this.server.info.name) {
+                    this.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: this.server.info.name,
+                    });
                 }
             });
 
-            this.server.updatesEventEmitter.on('closed', () => {
-                this.status({ fill: "red", shape: "ring", text: "disconnected" });
+            this.server.updatesEventEmitter.on("closed", () => {
+                this.status({
+                    fill: "red",
+                    shape: "ring",
+                    text: "disconnected",
+                });
             });
 
             this.server.updatesEventEmitter.on("status", (forceUpdate) => {
                 let bandIndexA = this.server.status.portA_band;
                 let bandIndexB = this.server.status.portB_band;
 
-                if(bandIndexA === undefined || bandIndexB === undefined) {
+                if (bandIndexA === undefined || bandIndexB === undefined) {
                     return;
                 }
 
-                if(bandIndexA < 0 || bandIndexA >= this.server.bands.length)
-                {
+                if (bandIndexA < 0 || bandIndexA >= this.server.bands.length) {
                     return;
                 }
 
-                if(bandIndexB < 0 || bandIndexB >= this.server.bands.length)
-                {
+                if (bandIndexB < 0 || bandIndexB >= this.server.bands.length) {
                     return;
                 }
 
@@ -49,13 +55,30 @@ module.exports = (RED) => {
                     this.bandNameB = bandNameB;
                 }
                 if (changed) {
-                    node.send({ payload: { bandLabelA: bandNameA, bandLabelB: bandNameB } });
-                    this.status({ fill: "green", shape: "dot", text: this.server.info.name + " - " + bandNameA + "/" + bandNameB });
+                    node.send({
+                        payload: {
+                            bandLabelA: bandNameA,
+                            bandLabelB: bandNameB,
+                        },
+                    });
+                    this.status({
+                        fill: "green",
+                        shape: "dot",
+                        text:
+                            this.server.info.name +
+                            " - " +
+                            bandNameA +
+                            "/" +
+                            bandNameB,
+                    });
                 }
             });
 
             this.server.connect();
         }
     }
-    RED.nodes.registerType("antenna-genius-band-labels", AntennaGeniusBandLabels);
-}
+    RED.nodes.registerType(
+        "antenna-genius-band-labels",
+        AntennaGeniusBandLabels
+    );
+};

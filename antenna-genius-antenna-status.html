@@ -1,17 +1,21 @@
 <script type="text/javascript">
-    RED.nodes.registerType('antenna-genius-antenna-status',{
-        category: 'antenna genius',
-        color: '#FFF0F0',
+    RED.nodes.registerType("antenna-genius-antenna-status", {
+        category: "antenna genius",
+        color: "#FFF0F0",
         defaults: {
-            name: {value:""},
-            server: {value:"", type:"antenna-genius-server"},
-            antennaNb: {value: 1, required: true, validate: RED.validators.number()},
+            name: { value: "" },
+            server: { value: "", type: "antenna-genius-server" },
+            antennaNb: {
+                value: 1,
+                required: true,
+                validate: RED.validators.number(),
+            },
         },
-        inputs:0,
-        outputs:2,
+        inputs: 0,
+        outputs: 2,
         icon: "font-awesome/fa-wifi",
-        label: function() {
-            return this.name||"antenna-genius-antenna-status";
+        label: function () {
+            return this.name || "antenna-genius-antenna-status";
         },
         paletteLabel: "antenna-status",
         outputLabels: ["Antenna Radio A Status", "Antenna Radio B Status"],
@@ -21,15 +25,23 @@
 <script type="text/html" data-template-name="antenna-genius-antenna-status">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name" placeholder="Name" />
     </div>
     <div class="form-row">
-        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
-        <input type="text" id="node-input-server" placeholder="Server">
+        <label for="node-input-server"
+            ><i class="fa fa-server"></i> Server</label
+        >
+        <input type="text" id="node-input-server" placeholder="Server" />
     </div>
     <div class="form-row">
-        <label for="node-input-antennaNb"><i class="fa fa-wifi"></i> Antenna Number</label>
-        <input type="text" id="node-input-antennaNb" placeholder="Antenna Number">
+        <label for="node-input-antennaNb"
+            ><i class="fa fa-wifi"></i> Antenna Number</label
+        >
+        <input
+            type="text"
+            id="node-input-antennaNb"
+            placeholder="Antenna Number"
+        />
     </div>
 </script>
 
@@ -46,7 +58,7 @@ Return Radio A & B status for an antenna.
 
 Port 1: Status for Radio A antenna.
 
-: payload.selected (boolean) : this is the currently selected antenna for Radio A on the current band. 
+: payload.selected (boolean) : this is the currently selected antenna for Radio A on the current band.
 
 : payload.enabled (boolean) : this antenna can be selected for use by Radio A on the current band.
 
@@ -60,7 +72,7 @@ Port 1: Status for Radio A antenna.
 
 Port 2: Status for Radio A antenna.
 
-: payload.selected (boolean) : this is the currently selected antenna for Radio B on the current band. 
+: payload.selected (boolean) : this is the currently selected antenna for Radio B on the current band.
 
 : payload.enabled (boolean) : this antenna can be selected for use by Radio B on the current band.
 
@@ -75,5 +87,4 @@ Port 2: Status for Radio A antenna.
 ### Details
 
 A typical workflow is to feed each output to a `button` and then map `payload.name` to the button's `label`, and `payload.background` to the button's `background`. Set the buttons `payload` to `true` and `Topic` to `msg.topic` when clicked and everything is setup to directly feed an `activate-antenna` node.
-
 </script>

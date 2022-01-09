@@ -20,7 +20,9 @@ module.exports = (RED) => {
             this.server = RED.nodes.getNode(config.server);
 
             this.server.updatesEventEmitter.on("connected", () => {
-                this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                if(this.server.info.name ) {
+                    this.status({ fill: "green", shape: "dot", text: this.server.info.name });
+                }
             });
 
             this.server.updatesEventEmitter.on('closed', () => {
@@ -30,7 +32,7 @@ module.exports = (RED) => {
             this.server.updatesEventEmitter.on("status", () => {
 
                 let maxNumberOfAntennas = this.server.status.stackReach * 8;
-                if(this.antennaNumber < 1 || this.antennaNumber > maxNumberOfAntennas) {
+                if(this.antennaNumber < 1 || this.antennaNumber > maxNumberOfAntennas || this.antennaNumber > this.server.antennas.length) {
                     this.status({ fill: "red", shape: "ring", text: "antenna number is out of range" });
                     return;
                 }

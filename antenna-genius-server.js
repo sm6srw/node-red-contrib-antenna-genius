@@ -114,6 +114,7 @@ module.exports = (RED) => {
                 this.autoConnect = false;
                 this.connected = false;
                 this.client.end();
+                this.forceUpdate();
                 done();
             });
         }

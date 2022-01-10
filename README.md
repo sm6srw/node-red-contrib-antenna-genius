@@ -59,7 +59,7 @@ Port 2: Status for Radio A antenna.
 
 ### Details
 
-A typical workflow is to feed each output to a `button` and then map `payload.name` to the button`s `label`, and `payload.background` to the button`s `background`. Set the buttons `payload` to `true` and `Topic` to `msg.topic` when clicked and everything is setup to directly feed an `activate-antenna` node.
+A typical workflow is to feed each output to a `button` and then map `payload.name` to the button's `label`, and `payload.background` to the button's `background`. Set the buttons `payload` to `true` and `Topic` to `msg.topic` when clicked and everything is setup to directly feed an `activate-antenna` node.
 
 ## antenna-genius-activate-antenna
 

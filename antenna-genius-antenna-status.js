@@ -19,6 +19,15 @@ module.exports = (RED) => {
             };
             this.server = RED.nodes.getNode(config.server);
 
+            if(this.server == null) {
+                this.status({
+                    fill: "red",
+                    shape: "ring",
+                    text: "disconnected",
+                });
+                return;
+            }
+
             this.server.updatesEventEmitter.on("connected", () => {
                 if (this.server.info.name) {
                     this.status({

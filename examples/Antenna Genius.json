@@ -1,0 +1,229 @@
+[
+    {
+        "id": "dae0c396900b679c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "490d38d6edc8b3d3",
+        "type": "ui_button",
+        "z": "dae0c396900b679c",
+        "name": "A",
+        "group": "c4ec36e264004fa8",
+        "order": 4,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "{{payload.name}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{payload.background}}",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 650,
+        "y": 160,
+        "wires": [
+            [
+                "21cbfe61e047667a"
+            ]
+        ]
+    },
+    {
+        "id": "4ce85a4a6d600cbb",
+        "type": "ui_button",
+        "z": "dae0c396900b679c",
+        "name": "B",
+        "group": "c4ec36e264004fa8",
+        "order": 6,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "{{payload.name}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{payload.background}}",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "21cbfe61e047667a"
+            ]
+        ]
+    },
+    {
+        "id": "4fbaa2cf09147758",
+        "type": "ui_text",
+        "z": "dae0c396900b679c",
+        "group": "c4ec36e264004fa8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Radio A  |  Radio B",
+        "format": "{{msg.payload.bandLabelA}} | {{msg.payload.bandLabelB}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 690,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "8f71346072320a9f",
+        "type": "ui_button",
+        "z": "dae0c396900b679c",
+        "name": "A",
+        "group": "c4ec36e264004fa8",
+        "order": 8,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "{{payload.name}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{payload.background}}",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "21cbfe61e047667a"
+            ]
+        ]
+    },
+    {
+        "id": "68254444f1308033",
+        "type": "ui_button",
+        "z": "dae0c396900b679c",
+        "name": "B",
+        "group": "c4ec36e264004fa8",
+        "order": 10,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "{{payload.name}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{payload.background}}",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 730,
+        "y": 280,
+        "wires": [
+            [
+                "21cbfe61e047667a"
+            ]
+        ]
+    },
+    {
+        "id": "78617c107783edfa",
+        "type": "antenna-genius-band-labels",
+        "z": "dae0c396900b679c",
+        "name": "",
+        "server": "",
+        "x": 400,
+        "y": 100,
+        "wires": [
+            [
+                "4fbaa2cf09147758"
+            ]
+        ]
+    },
+    {
+        "id": "c273fac278c6addb",
+        "type": "antenna-genius-antenna-status",
+        "z": "dae0c396900b679c",
+        "name": "",
+        "server": "",
+        "antennaNb": "1",
+        "x": 390,
+        "y": 200,
+        "wires": [
+            [
+                "490d38d6edc8b3d3"
+            ],
+            [
+                "4ce85a4a6d600cbb"
+            ]
+        ]
+    },
+    {
+        "id": "21cbfe61e047667a",
+        "type": "antenna-genius-activate-antenna",
+        "z": "dae0c396900b679c",
+        "name": "",
+        "server": "",
+        "x": 1080,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9efa627cb00ca277",
+        "type": "antenna-genius-antenna-status",
+        "z": "dae0c396900b679c",
+        "name": "",
+        "server": "",
+        "antennaNb": "2",
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "8f71346072320a9f"
+            ],
+            [
+                "68254444f1308033"
+            ]
+        ]
+    },
+    {
+        "id": "8233785eeb4f52ab",
+        "type": "comment",
+        "z": "dae0c396900b679c",
+        "name": "Antennas",
+        "info": "",
+        "x": 660,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c4ec36e264004fa8",
+        "type": "ui_group",
+        "name": "Antenna Genius",
+        "tab": "ac6e9d7b975180d8",
+        "order": 1,
+        "disp": false,
+        "width": "4",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ac6e9d7b975180d8",
+        "type": "ui_tab",
+        "name": "Antenna Genius",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

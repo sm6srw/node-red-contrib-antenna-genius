@@ -10,8 +10,7 @@
     "watch": "jest --watch",
     "start": "node ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red ",
     "debug": "node --nolazy ./node_modules/node-red/red.js -v -u C:/Users/dahlj.GREATSTONE/.node-red",
-    "preversion": "npm test",
-    "version": "auto-dist-tag --write"
+    "preversion": "npm test"
   },
   "repository": {
     "type": "git",
@@ -45,6 +44,6 @@
     "verbose": true
   },
   "publishConfig": {
-    "tag": "latest"
+    "tag": "beta"
   }
 }

@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
   "node-red": {
-    "version": ">=2.0.0",
     "nodes": {
       "antenna-genius-server": "antenna-genius-server.js",
       "antenna-genius-band-labels": "antenna-genius-band-labels.js",

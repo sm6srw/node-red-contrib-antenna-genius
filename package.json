@@ -5,6 +5,7 @@
   "keywords": [
     "node-red"
   ],
+  "preid": "beta",
   "scripts": {
     "test": "jest",
     "watch": "jest --watch",

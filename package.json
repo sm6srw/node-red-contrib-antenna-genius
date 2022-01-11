@@ -1,11 +1,10 @@
 {
   "name": "node-red-contrib-antenna-genius",
-  "version": "0.3.2-0",
+  "version": "0.3.1",
   "description": "Antenna Genius Control and Monitoring Nodes",
   "keywords": [
     "node-red"
   ],
-  "preid": "beta",
   "scripts": {
     "test": "jest",
     "watch": "jest --watch",
@@ -35,6 +34,7 @@
     "promise-socket": "^7.0.0"
   },
   "devDependencies": {
+    "auto-dist-tag": "^2.1.1",
     "jest": "^27.4.7",
     "node-red": "^2.1.4",
     "node-red-node-test-helper": "^0.2.7"

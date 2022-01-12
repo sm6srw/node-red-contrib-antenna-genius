@@ -1,4 +1,4 @@
-const { encode, decode } = require("../Utils.js");
+const { encode, decode } = require("../GeniusUtils.js");
 
 describe("Utils", () => {
     it("should encode null input gracefully", (done) => {

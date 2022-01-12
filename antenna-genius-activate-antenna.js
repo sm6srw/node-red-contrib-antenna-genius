@@ -1,4 +1,4 @@
-const Utils = require("./Utils");
+const Utils = require("./GeniusUtils");
 
 module.exports = (RED) => {
     class AntennaGeniusActivateAntenna {

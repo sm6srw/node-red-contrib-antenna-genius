@@ -1,7 +1,7 @@
 const Net = require("net");
 const { PromiseSocket } = require("promise-socket");
 const EventEmitter = require("events");
-const Utils = require("./Utils");
+const Utils = require("./GeniusUtils");
 
 class UpdatesEventEmitter extends EventEmitter {}
 

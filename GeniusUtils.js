@@ -169,3 +169,4 @@ const decode412 = (data) => {
 
 exports.encode = encode;
 exports.decode = decode;
+exports.decodeheader = decodeheader;

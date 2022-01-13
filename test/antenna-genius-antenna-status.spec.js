@@ -1,16 +1,30 @@
 const helper = require("node-red-node-test-helper");
 const antennaStatusNode = require("../antenna-genius-antenna-status.js");
 const serverNode = require("../antenna-genius-server.js");
+const testServer = require("./GeniusTestServer.js");
 
 const nodes = [antennaStatusNode, serverNode];
 
 describe("antenna-genius-antenna-status Node", () => {
+    var port;
+
+    beforeEach(async () => {
+        port = await testServer.start();
+    });
+
+    afterEach(async () => {
+        testServer.stop();
+        helper.unload();
+        flow[0].port = 9007;
+        flow[0].autoConnect = false;
+    });
+
     const flow = [
         {
             id: "n1",
             type: "antenna-genius-server",
             name: "test name",
-            hostname: "localhost",
+            host: "localhost",
             port: 9007,
             disabledColor: "Black",
             activeColor: "Green",
@@ -28,10 +42,6 @@ describe("antenna-genius-antenna-status Node", () => {
         { id: "n3", type: "helper" },
         { id: "n4", type: "helper" },
     ];
-
-    afterEach(() => {
-        helper.unload();
-    });
 
     it("should be loaded", (done) => {
         helper.load(nodes, flow, () => {
@@ -169,6 +179,56 @@ describe("antenna-genius-antenna-status Node", () => {
                     });
                     expect(msg).toHaveProperty("enabled", true);
                     expect(msg).toHaveProperty("topic", "2;2");
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
+        });
+    });
+
+    it("should provide A port output when connected to server", (done) => {
+        flow[0].port = port;
+        flow[0].autoConnect = true;
+        helper.load(nodes, flow, () => {
+            let n3 = helper.getNode("n3");
+            n3.on("input", (msg) => {
+                try {
+                    expect(msg).toMatchObject({
+                        enabled: true,
+                        payload: {
+                            background: "Blue",
+                            enabled: true,
+                            name: "Antenna2",
+                            selected: true,
+                        },
+                        topic: "1;2",
+                    });
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
+        });
+    });
+
+    it("should provide B port output when connected to server", (done) => {
+        flow[0].port = port;
+        flow[0].autoConnect = true;
+        helper.load(nodes, flow, () => {
+            let n4 = helper.getNode("n4");
+            n4.on("input", (msg) => {
+                try {
+                    expect(msg).toMatchObject({
+                        enabled: true,
+                        payload: {
+                            background: "Green",
+                            enabled: true,
+                            name: "Antenna2",
+                            selected: false,
+                        },
+                        topic: "2;2",
+                    });
                     done();
                 } catch (err) {
                     done(err);

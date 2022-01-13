@@ -1,16 +1,30 @@
 const helper = require("node-red-node-test-helper");
 const bandLabelsNode = require("../antenna-genius-band-labels.js");
 const serverNode = require("../antenna-genius-server.js");
+const testServer = require("./GeniusTestServer.js");
 
 const nodes = [bandLabelsNode, serverNode];
 
 describe("antenna-genius-band-labels Node", () => {
+    var port;
+
+    beforeEach(async () => {
+        port = await testServer.start();
+    });
+
+    afterEach(async () => {
+        testServer.stop();
+        helper.unload();
+        flow[0].port = 9007;
+        flow[0].autoConnect = false;
+    });
+
     const flow = [
         {
             id: "n1",
             type: "antenna-genius-server",
             name: "test name",
-            hostname: "localhost",
+            host: "localhost",
             port: 9007,
             disabledColor: "Black",
             activeColor: "Green",
@@ -26,12 +40,6 @@ describe("antenna-genius-band-labels Node", () => {
         },
         { id: "n3", type: "helper" },
     ];
-
-    beforeEach(() => {});
-
-    afterEach(() => {
-        helper.unload();
-    });
 
     it("should be loaded", (done) => {
         helper.load(nodes, flow, () => {
@@ -138,6 +146,24 @@ describe("antenna-genius-band-labels Node", () => {
                 })
             ).toBeTruthy();
             done();
+        });
+    });
+
+    it("should connect with test server and provide valid output", (done) => {
+        flow[0].port = port;
+        flow[0].autoConnect = true;
+        helper.load(nodes, flow, () => {
+            let n3 = helper.getNode("n3");
+            n3.on("input", (msg) => {
+                try {
+                    expect(msg).toMatchObject({
+                        payload: { bandLabelA: "160m", bandLabelB: "80m" },
+                    });
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
         });
     });
 });

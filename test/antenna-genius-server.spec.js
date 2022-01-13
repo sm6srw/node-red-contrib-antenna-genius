@@ -1,12 +1,9 @@
-const Net = require("net");
 const helper = require("node-red-node-test-helper");
-const { PromiseSocket } = require("promise-socket");
 const serverNode = require("../antenna-genius-server.js");
 const testServer = require("./GeniusTestServer.js");
 
 describe("antenna-genius-server Node", () => {
     var port;
-    var client;
 
     beforeEach(async () => {
         port = await testServer.start();

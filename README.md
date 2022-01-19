@@ -1,6 +1,14 @@
 # node-red-contrib-antenna-genius
 Antenna Genius Control and Monitoring Nodes
 
+[![Node.js CI](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/node.js.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/node.js.yml)
+
+[![Node.js Package](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/npm-publish.yml)
+
+[![CodeQL](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/codeql-analysis.yml)
+
+[![njsscan sarif](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/njsscan-analysis.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/njsscan-analysis.yml)
+
 ![image](https://user-images.githubusercontent.com/7033002/148573983-00305f15-7acf-4d4d-bb1f-9c820c4b3a79.png) ![image](https://user-images.githubusercontent.com/7033002/148489672-9e2c03e0-a968-4c2f-9dc7-923c5423fad7.png)
 
 ![image](https://user-images.githubusercontent.com/7033002/148574085-f0705a9c-7ac8-4ca0-b96a-ea7a14975d87.png)

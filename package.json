@@ -34,7 +34,7 @@
     "promise-socket": "^7.0.0"
   },
   "devDependencies": {
-    "auto-dist-tag": "^2.1.1",
+    "auto-dist-tag": "^2.2.2",
     "jest": "^27.4.7",
     "node-red": "^2.1.4",
     "node-red-node-test-helper": "^0.2.7"

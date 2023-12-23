@@ -34,6 +34,7 @@ module.exports = (RED) => {
                 this.log("TCP connection disconnected with the server.");
                 clearInterval(this.interval);
                 clearTimeout(this.timer);
+                this.connected = false;
 
                 if (this.updatesEventEmitter.listenerCount("closed") == 0) {
                     this.log(

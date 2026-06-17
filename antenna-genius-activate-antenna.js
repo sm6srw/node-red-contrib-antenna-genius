@@ -1,5 +1,3 @@
-const Utils = require("./GeniusUtils");
-
 module.exports = (RED) => {
     class AntennaGeniusActivateAntenna {
         constructor(config) {
@@ -47,9 +45,7 @@ module.exports = (RED) => {
                         });
                     }
 
-                    let command = Utils.encode(0, 0, 415, 0, msg.topic);
-
-                    this.server.client.write(command);
+                    this.server.activate(msg.topic);
                 } else {
                     this.status({
                         fill: "red",

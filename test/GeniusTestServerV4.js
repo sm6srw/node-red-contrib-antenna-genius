@@ -54,7 +54,7 @@ const start = () => {
 
         conn.on("data", (data) => {
             lineBuffer += data.toString();
-            const lines = lineBuffer.split("\r");
+            const lines = lineBuffer.split("\n");
             lineBuffer = lines.pop();
 
             for (const line of lines) {

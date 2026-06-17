@@ -67,7 +67,7 @@ class GeniusV4Protocol {
         const seq = this.nextSeq();
         return new Promise((resolve, reject) => {
             this.pending.set(seq, { resolve, reject, lines: null, multi: false });
-            this.socket.write(`C${seq}|${cmd}\r`);
+            this.socket.write(`C${seq}|${cmd}\r\n`);
         });
     }
 
@@ -75,7 +75,7 @@ class GeniusV4Protocol {
         const seq = this.nextSeq();
         return new Promise((resolve, reject) => {
             this.pending.set(seq, { resolve, reject, lines: [], multi: true });
-            this.socket.write(`C${seq}|${cmd}\r`);
+            this.socket.write(`C${seq}|${cmd}\r\n`);
         });
     }
 

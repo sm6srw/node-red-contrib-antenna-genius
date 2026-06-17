@@ -232,8 +232,12 @@ module.exports = (RED) => {
                 }
             });
 
-            this.forceUpdate();
             this.updatesEventEmitter.emit("connected");
+            // Emit initial status so consumer nodes produce output immediately.
+            // In v3 the poll interval does this; in v4 we only get push updates
+            // when something changes, so we trigger it manually here.
+            this.refresh = 0;
+            this.updatesEventEmitter.emit("status", true);
         }
 
         async _reloadV4Antennas() {

@@ -35,4 +35,4 @@ jobs:
           package-manager-cache: false  # never use caching in release builds
       - run: npm ci
       - run: npx auto-dist-tag --write
-      - run: npm publish --provenance --access public
+      - run: npm publish

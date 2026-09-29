@@ -69,6 +69,9 @@ module.exports = (RED) => {
                 this.log("TCP connection established with the server.");
                 this.connected = true;
 
+                // Write empty sync command to trigger banner from V4 devices after version 4.19.  
+                this.client.write("");
+
                 // Detect API version from prologue banner.
                 // V4 devices immediately send "V4.x.x AG\r\n" upon connection.
                 // V3 devices send nothing and wait for commands.

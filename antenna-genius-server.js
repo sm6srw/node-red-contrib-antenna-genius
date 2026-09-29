@@ -213,12 +213,14 @@ module.exports = (RED) => {
             const antennaLines = await v4.sendCommandMulti("antenna list");        
             this.antennas = parseAntennaList(antennaLines); 
             this.updatesEventEmitter.emit("antennas");
-
+            this.log("Retrieved antenna list from V4 device: " + antennaLines.join("\n"));
             const bandLines = await v4.sendCommandMulti("band list");
             this.bands = parseBandList(bandLines);
             this.updatesEventEmitter.emit("bands");
+            this.log("Retrieved band list from V4 device: " + bandLines.join("\n"));    
 
             await v4.sendCommand("sub port all");
+            this.log("Sent subscription command to V4 device for all ports.");
 
             v4.onStatus((msg) => {
                 this.log("Received status message from V4 device: " + msg);
@@ -242,7 +244,9 @@ module.exports = (RED) => {
                 }
             });
 
+            this.log("V4 device connected, emitting connected event.");
             this.updatesEventEmitter.emit("connected");
+            this.log("Emitting initial status to consumer nodes.");
             // Emit initial status so consumer nodes produce output immediately.
             // In v3 the poll interval does this; in v4 we only get push updates
             // when something changes, so we trigger it manually here.

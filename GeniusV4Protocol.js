@@ -22,6 +22,7 @@ class GeniusV4Protocol {
     }
 
     _handleLine(line) {
+        console.log("Handling line: " + line);
         if (!line) return;
 
         if (line.startsWith("S")) {

@@ -71,7 +71,7 @@ module.exports = (RED) => {
 
                 // Write empty sync command to trigger banner from V4 devices after version 4.19.  
                 this.client.write("");
-
+                this.log("Sent empty sync command to trigger banner from V4 devices.");
                 // Detect API version from prologue banner.
                 // V4 devices immediately send "V4.x.x AG\r\n" upon connection.
                 // V3 devices send nothing and wait for commands.
@@ -91,9 +91,11 @@ module.exports = (RED) => {
                 try {
                     if (banner && /^V4/.test(banner)) {
                         this.apiVersion = 4;
+                        this.log("Detected V4 device from banner: " + banner);
                         await this._connectV4();
                     } else {
                         this.apiVersion = 3;
+                        this.log("Assuming V3 device as no V4 banner was detected.");
                         await this._connectV3();
                     }
                 } catch (err) {

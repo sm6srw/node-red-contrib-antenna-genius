@@ -189,9 +189,12 @@ module.exports = (RED) => {
 
             const infoMsg = await v4.sendCommand("info get");
             this.info = parseInfo(infoMsg);
+            this.log("Retrieved info from V4 device: " + infoMsg);
 
             const port1Msg = await v4.sendCommand("port get 1");
+            this.log("Retrieved port 1 info from V4 device: " + port1Msg);
             const port2Msg = await v4.sendCommand("port get 2");
+            this.log("Retrieved port 2 info from V4 device: " + port2Msg);
             const port1 = parsePort(port1Msg);
             const port2 = parsePort(port2Msg);
             this.status = {
@@ -206,8 +209,8 @@ module.exports = (RED) => {
                 stackReach: Math.ceil(this.info.antennas / 8),
             };
 
-            const antennaLines = await v4.sendCommandMulti("antenna list");
-            this.antennas = parseAntennaList(antennaLines);
+            const antennaLines = await v4.sendCommandMulti("antenna list");        
+            this.antennas = parseAntennaList(antennaLines); 
             this.updatesEventEmitter.emit("antennas");
 
             const bandLines = await v4.sendCommandMulti("band list");

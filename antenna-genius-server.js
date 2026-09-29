@@ -217,6 +217,7 @@ module.exports = (RED) => {
             await v4.sendCommand("sub port all");
 
             v4.onStatus((msg) => {
+                this.log("Received status message from V4 device: " + msg);
                 if (msg.startsWith("port ")) {
                     const portData = parsePort(msg);
                     if (portData.portNum === 1) {

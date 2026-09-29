@@ -3,6 +3,7 @@ const { PromiseSocket } = require("promise-socket");
 const EventEmitter = require("events");
 const Utils = require("./GeniusUtils");
 const { GeniusV4Protocol, parseInfo, parsePort, parseAntennaList, parseBandList } = require("./GeniusV4Protocol");
+const { log } = require("console");
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -247,6 +248,7 @@ module.exports = (RED) => {
             // when something changes, so we trigger it manually here.
             this.refresh = 0;
             this.updatesEventEmitter.emit("status", true);
+            this.log("Initial status emitted.");
         }
 
         async _reloadV4Antennas() {

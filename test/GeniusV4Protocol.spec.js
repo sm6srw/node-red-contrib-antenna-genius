@@ -20,6 +20,7 @@ describe("GeniusV4Protocol sendCommand", () => {
         const promise = protocol.sendCommand("sub port all", 1000);
         expect(protocol.pending.size).toBe(1);
         jest.advanceTimersByTime(1000);
+        await expect(promise).rejects.toMatchObject({ code: "ETIMEDOUT" });
         await expect(promise).rejects.toThrow(/Timeout waiting for reply to 'sub port all'/);
         expect(protocol.pending.size).toBe(0);
     });

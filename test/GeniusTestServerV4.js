@@ -33,7 +33,7 @@ const antennas = [
 ];
 
 // silentSub mimics firmware 4.19: "sub port all" pushes status but sends no R reply.
-const start = ({ silentSub = false } = {}) => {
+const start = ({ silentSub = false, subError = false, closeOnSub = false } = {}) => {
     server = net.createServer();
     server.on("connection", (conn) => {
         let lineBuffer = "";
@@ -78,7 +78,11 @@ const start = ({ silentSub = false } = {}) => {
                     sendMultiResponse(seq, bands);
                 } else if (cmd === "sub port all") {
                     portSubscribed = true;
-                    if (silentSub) {
+                    if (closeOnSub) {
+                        conn.destroy();
+                    } else if (subError) {
+                        conn.write(`R${seq}|1|subscription failed\r\n`);
+                    } else if (silentSub) {
                         conn.write("S0|port 1 auto=1 source=AUTO band=1 rxant=2 txant=2 tx=0 inhibit=0\r\n");
                         conn.write("S0|port 2 auto=1 source=AUTO band=2 rxant=4 txant=4 tx=0 inhibit=0\r\n");
                     } else {

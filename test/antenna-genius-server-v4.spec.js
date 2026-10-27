@@ -171,6 +171,7 @@ describe("antenna-genius-server Node (v4)", () => {
     });
 
     it("connects when the device never replies to 'sub port all' (firmware 4.19)", async () => {
+        testServer.stop();
         port = await testServer.start({ silentSub: true });
         const flow = [
             {
@@ -192,6 +193,68 @@ describe("antenna-genius-server Node (v4)", () => {
                     expect(n1.connected).toBeTruthy();
                     expect(n1.status.portA_band).toBe(1);
                     resolve();
+                });
+                n1.connect();
+            });
+        });
+    });
+
+    it("does not connect when the subscription command fails", async () => {
+        testServer.stop();
+        port = await testServer.start({ subError: true });
+        const flow = [
+            {
+                id: "n1",
+                type: "antenna-genius-server",
+                name: "test name",
+                host: "localhost",
+                port: port,
+                disabledColor: "Black",
+                activeColor: "Green",
+                selectedColor: "Blue",
+                autoConnect: true,
+            },
+        ];
+        const connected = jest.fn();
+        const warning = await new Promise((resolve) => {
+            helper.load(serverNode, flow, () => {
+                const n1 = helper.getNode("n1");
+                n1.updatesEventEmitter.on("connected", connected);
+                jest.spyOn(n1, "warn").mockImplementation(resolve);
+                n1.connect();
+            });
+        });
+        expect(warning).toContain("Command error: 0x1 - subscription failed");
+        expect(connected).not.toHaveBeenCalled();
+    });
+
+    it("does not connect if the socket closes during the subscription wait", async () => {
+        testServer.stop();
+        port = await testServer.start({ closeOnSub: true });
+        const flow = [
+            {
+                id: "n1",
+                type: "antenna-genius-server",
+                name: "test name",
+                host: "localhost",
+                port: port,
+                disabledColor: "Black",
+                activeColor: "Green",
+                selectedColor: "Blue",
+                autoConnect: true,
+            },
+        ];
+        await new Promise((resolve) => {
+            helper.load(serverNode, flow, () => {
+                const n1 = helper.getNode("n1");
+                const connected = jest.fn();
+                n1.updatesEventEmitter.on("connected", connected);
+                n1.client.once("close", () => {
+                    setTimeout(() => {
+                        expect(connected).not.toHaveBeenCalled();
+                        expect(n1.connected).toBe(false);
+                        resolve();
+                    }, 1100);
                 });
                 n1.connect();
             });

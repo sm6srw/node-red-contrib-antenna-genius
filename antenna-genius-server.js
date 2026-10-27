@@ -244,8 +244,13 @@ module.exports = (RED) => {
                 await v4.sendCommand("sub port all", 1000);
                 this.log("Sent subscription command to V4 device for all ports.");
             } catch (err) {
+                if (err.code !== "ETIMEDOUT") {
+                    throw err;
+                }
                 this.log("No reply to subscription command (continuing): " + err.message);
             }
+
+            if (this._v4 !== v4 || !this.connected) return;
 
             this.log("V4 device connected, emitting connected event.");
             this.updatesEventEmitter.emit("connected");

@@ -219,9 +219,8 @@ module.exports = (RED) => {
             this.updatesEventEmitter.emit("bands");
             this.log("Retrieved band list from V4 device: " + bandLines.join("\n"));    
 
-            await v4.sendCommand("sub port all");
-            this.log("Sent subscription command to V4 device for all ports.");
-
+            // Register before subscribing: the device pushes status lines immediately
+            // and newer firmware may not send an R reply for "sub".
             v4.onStatus((msg) => {
                 this.log("Received status message from V4 device: " + msg);
                 if (msg.startsWith("port ")) {
@@ -243,6 +242,13 @@ module.exports = (RED) => {
                     this._reloadV4Antennas();
                 }
             });
+
+            try {
+                await v4.sendCommand("sub port all", 3000);
+                this.log("Sent subscription command to V4 device for all ports.");
+            } catch (err) {
+                this.log("No reply to subscription command (continuing): " + err.message);
+            }
 
             this.log("V4 device connected, emitting connected event.");
             this.updatesEventEmitter.emit("connected");

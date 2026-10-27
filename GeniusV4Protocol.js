@@ -64,11 +64,20 @@ class GeniusV4Protocol {
         }
     }
 
-    sendCommand(cmd) {
+    sendCommand(cmd, timeoutMs) {
         const seq = this.nextSeq();
         console.log("Sending command: " + cmd + " with sequence number: " + seq);
         return new Promise((resolve, reject) => {
-            this.pending.set(seq, { resolve, reject, lines: null, multi: false });
+            const entry = { resolve, reject, lines: null, multi: false };
+            if (timeoutMs) {
+                const timer = setTimeout(() => {
+                    this.pending.delete(seq);
+                    reject(new Error(`Timeout waiting for reply to '${cmd}'`));
+                }, timeoutMs);
+                entry.resolve = (v) => { clearTimeout(timer); resolve(v); };
+                entry.reject = (e) => { clearTimeout(timer); reject(e); };
+            }
+            this.pending.set(seq, entry);
             this.socket.write(`C${seq}|${cmd}\r\n`);
         });
     }

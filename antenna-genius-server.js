@@ -240,12 +240,11 @@ module.exports = (RED) => {
                 }
             });
 
-            try {
-                await v4.sendCommand("sub port all", 3000);
-                this.log("Sent subscription command to V4 device for all ports.");
-            } catch (err) {
-                this.log("No reply to subscription command (continuing): " + err.message);
-            }
+            // Firmware 4.19 sends no R reply to "sub", so don't block on it.
+            v4.sendCommand("sub port all", 1000).then(
+                () => this.log("Subscribed to all ports on V4 device."),
+                (err) => this.log("Subscription command not acknowledged (continuing): " + err.message)
+            );
 
             this.log("V4 device connected, emitting connected event.");
             this.updatesEventEmitter.emit("connected");

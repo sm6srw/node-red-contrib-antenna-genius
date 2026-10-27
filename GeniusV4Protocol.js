@@ -72,7 +72,7 @@ class GeniusV4Protocol {
             if (timeoutMs) {
                 const timer = setTimeout(() => {
                     this.pending.delete(seq);
-                    reject(new Error(`Timeout waiting for reply to '${cmd}'`));
+                    reject(new Error(`Timeout waiting for reply to '${cmd}' (unterminated buffer: ${JSON.stringify(this.lineBuffer)})`));
                 }, timeoutMs);
                 entry.resolve = (v) => { clearTimeout(timer); resolve(v); };
                 entry.reject = (e) => { clearTimeout(timer); reject(e); };

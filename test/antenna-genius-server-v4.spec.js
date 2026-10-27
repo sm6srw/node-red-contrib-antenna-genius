@@ -169,4 +169,32 @@ describe("antenna-genius-server Node (v4)", () => {
             n1.connect();
         });
     });
+
+    it("connects when the device never replies to 'sub port all' (firmware 4.19)", async () => {
+        port = await testServer.start({ silentSub: true });
+        const flow = [
+            {
+                id: "n1",
+                type: "antenna-genius-server",
+                name: "test name",
+                host: "localhost",
+                port: port,
+                disabledColor: "Black",
+                activeColor: "Green",
+                selectedColor: "Blue",
+                autoConnect: true,
+            },
+        ];
+        await new Promise((resolve) => {
+            helper.load(serverNode, flow, () => {
+                const n1 = helper.getNode("n1");
+                n1.updatesEventEmitter.on("connected", () => {
+                    expect(n1.connected).toBeTruthy();
+                    expect(n1.status.portA_band).toBe(1);
+                    resolve();
+                });
+                n1.connect();
+            });
+        });
+    });
 });

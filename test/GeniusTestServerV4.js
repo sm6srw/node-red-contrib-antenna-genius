@@ -32,7 +32,8 @@ const antennas = [
     "antenna 8 name=Antenna_8 tx=ffff rx=ffff inband=0000",
 ];
 
-const start = () => {
+// silentSub mimics firmware 4.19: "sub port all" pushes status but sends no R reply.
+const start = ({ silentSub = false } = {}) => {
     server = net.createServer();
     server.on("connection", (conn) => {
         let lineBuffer = "";
@@ -77,7 +78,12 @@ const start = () => {
                     sendMultiResponse(seq, bands);
                 } else if (cmd === "sub port all") {
                     portSubscribed = true;
-                    sendResponse(seq, "");
+                    if (silentSub) {
+                        conn.write("S0|port 1 auto=1 source=AUTO band=1 rxant=2 txant=2 tx=0 inhibit=0\r\n");
+                        conn.write("S0|port 2 auto=1 source=AUTO band=2 rxant=4 txant=4 tx=0 inhibit=0\r\n");
+                    } else {
+                        sendResponse(seq, "");
+                    }
                 } else if (cmd.startsWith("port set ")) {
                     sendResponse(seq, "");
                 } else {

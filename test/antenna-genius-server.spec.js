@@ -423,4 +423,50 @@ describe("antenna-genius-server Node", () => {
             n1.connect();
         });
     });
+
+    it("does not accumulate antennas, bands or data handlers on reconnect", (done) => {
+        let flow = [
+            {
+                id: "n1",
+                type: "antenna-genius-server",
+                name: "test name",
+                host: "localhost",
+                port: port,
+                disabledColor: "Black",
+                activeColor: "Green",
+                selectedColor: "Blue",
+                autoConnect: true,
+            },
+        ];
+        helper.load(serverNode, flow, () => {
+            let n1 = helper.getNode("n1");
+            let connections = 0;
+            let antennaCount;
+            let bandCount;
+
+            n1.updatesEventEmitter.on("closed", () => {
+                clearTimeout(n1.timer);
+                n1.connect();
+            });
+            n1.updatesEventEmitter.on("connected", () => {
+                connections++;
+                if (connections === 1) {
+                    antennaCount = n1.antennas.length;
+                    bandCount = n1.bands.length;
+                    expect(n1.client.listenerCount("data")).toBe(1);
+                    n1.client.destroy();
+                    return;
+                }
+                try {
+                    expect(n1.antennas).toHaveLength(antennaCount);
+                    expect(n1.bands).toHaveLength(bandCount);
+                    expect(n1.client.listenerCount("data")).toBe(1);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
+            n1.connect();
+        });
+    });
 });

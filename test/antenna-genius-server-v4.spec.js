@@ -260,4 +260,63 @@ describe("antenna-genius-server Node (v4)", () => {
             });
         });
     });
+
+    describe("after connecting", () => {
+        const connectNode = () =>
+            new Promise((resolve) => {
+                    const flow = [
+                        {
+                            id: "n1",
+                            type: "antenna-genius-server",
+                            name: "test name",
+                            host: "localhost",
+                            port: port,
+                            disabledColor: "Black",
+                            activeColor: "Green",
+                            selectedColor: "Blue",
+                            autoConnect: true,
+                        },
+                    ];
+                    helper.load(serverNode, flow, () => {
+                        const n1 = helper.getNode("n1");
+                        n1.updatesEventEmitter.once("connected", () => resolve(n1));
+                        n1.connect();
+                    });
+            });
+
+        const nextEvent = (n1, name) =>
+            new Promise((resolve) => n1.updatesEventEmitter.once(name, resolve));
+
+        it("updates port A and port B from pushed status lines", async () => {
+            const n1 = await connectNode();
+            let p = nextEvent(n1, "status");
+            testServer.push("S0|port 1 band=5 rxant=3 txant=3 tx=1 inhibit=0");
+            await p;
+            expect(n1.status.portA_band).toBe(5);
+            expect(n1.status.portA_antenna).toBe(3);
+            expect(n1.status.portA_tx).toBe(1);
+
+            p = nextEvent(n1, "status");
+            testServer.push("S0|port 2 band=6 rxant=7 txant=7 tx=0 inhibit=1");
+            await p;
+            expect(n1.status.portB_band).toBe(6);
+            expect(n1.status.portB_antenna).toBe(7);
+            expect(n1.status.portB_inhibit).toBe(1);
+        });
+
+        it("reloads the antenna list on 'antenna reload'", async () => {
+            const n1 = await connectNode();
+            const p = nextEvent(n1, "antennas");
+            testServer.push("S0|antenna reload");
+            await p;
+            expect(testServer.getReceived().filter((c) => c === "antenna list")).toHaveLength(2);
+        });
+
+        it("sends a port set command when activating an antenna", async () => {
+            const n1 = await connectNode();
+            n1.activate("1;4");
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            expect(testServer.getReceived()).toContain("port set 1 rxant=4 txant=4");
+        });
+    });
 });

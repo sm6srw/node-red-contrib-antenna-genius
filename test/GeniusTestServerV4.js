@@ -1,6 +1,8 @@
 const net = require("net");
 
 var server;
+var received = [];
+var connections = [];
 
 const bands = [
     "band 0 name=None freq_start=0.000000 freq_stop=0.000000",
@@ -34,8 +36,11 @@ const antennas = [
 
 // silentSub mimics firmware 4.19: "sub port all" pushes status but sends no R reply.
 const start = ({ silentSub = false, subError = false, closeOnSub = false } = {}) => {
+    received = [];
+    connections = [];
     server = net.createServer();
     server.on("connection", (conn) => {
+        connections.push(conn);
         let lineBuffer = "";
         let portSubscribed = false;
 
@@ -65,6 +70,7 @@ const start = ({ silentSub = false, subError = false, closeOnSub = false } = {})
                 const pipeIdx = trimmed.indexOf("|");
                 const seq = parseInt(trimmed.substring(1, pipeIdx));
                 const cmd = trimmed.substring(pipeIdx + 1);
+                received.push(cmd);
 
                 if (cmd === "info get") {
                     sendResponse(seq, "info v=4.0.22 date=2023-08-22 btl=1.6 hw=2.0 serial=9A-3A-DC name=TestGenius ports=2 antennas=8 mode=master uptime=3600");
@@ -108,5 +114,15 @@ const stop = () => {
     server.unref();
 };
 
+const push = (line) => {
+    for (const conn of connections) {
+        conn.write(`${line}\r\n`);
+    }
+};
+
+const getReceived = () => received;
+
 exports.start = start;
 exports.stop = stop;
+exports.push = push;
+exports.getReceived = getReceived;

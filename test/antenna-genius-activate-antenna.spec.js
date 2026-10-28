@@ -41,6 +41,19 @@ describe("antenna-genius-activate-antenna Node", () => {
         });
     });
 
+    it("should remove its server listeners when closed", async () => {
+        await new Promise((resolve) => helper.load(nodes, flow, resolve));
+        let n2 = helper.getNode("n2");
+        let emitter = n2.server.updatesEventEmitter;
+        expect(emitter.listenerCount("connected")).toBe(1);
+        expect(emitter.listenerCount("closed")).toBe(1);
+
+        await n2.close();
+
+        expect(emitter.listenerCount("connected")).toBe(0);
+        expect(emitter.listenerCount("closed")).toBe(0);
+    });
+
     it("should have properties", (done) => {
         helper.load(nodes, flow, () => {
             let n2 = helper.getNode("n2");

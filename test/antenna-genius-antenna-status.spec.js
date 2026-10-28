@@ -187,6 +187,49 @@ describe("antenna-genius-antenna-status Node", () => {
         });
     });
 
+    it("should send copies of the payload, not its internal state", (done) => {
+        helper.load(nodes, flow, () => {
+            let n2 = helper.getNode("n2");
+            n2.server.info = { name: "Name" };
+            n2.server.status = {
+                portA_antenna: 1,
+                portA_band: 0,
+                portB_antenna: 2,
+                portB_band: 1,
+            };
+            n2.server.antennas = [
+                { name: "Antenna0", bands: [1, 1] },
+                { name: "Antenna1", bands: [1, 1] },
+            ];
+            n2.server.updatesEventEmitter.emit("status", false);
+
+            let [msgA, msgB] = n2.send.firstCall.args[0];
+            expect(msgA.payload).not.toBe(n2.radioA);
+            expect(msgB.payload).not.toBe(n2.radioB);
+
+            delete msgA.payload.name;
+            msgB.payload.background = "Red";
+            expect(n2.radioA.name).toBe("Antenna1");
+            expect(n2.radioB.background).toBe("Blue");
+            done();
+        });
+    });
+
+    it("should remove its server listeners when closed", async () => {
+        await new Promise((resolve) => helper.load(nodes, flow, resolve));
+        let n2 = helper.getNode("n2");
+        let emitter = n2.server.updatesEventEmitter;
+        expect(emitter.listenerCount("status")).toBe(1);
+        expect(emitter.listenerCount("connected")).toBe(1);
+        expect(emitter.listenerCount("closed")).toBe(1);
+
+        await n2.close();
+
+        expect(emitter.listenerCount("status")).toBe(0);
+        expect(emitter.listenerCount("connected")).toBe(0);
+        expect(emitter.listenerCount("closed")).toBe(0);
+    });
+
     it("should provide A port output when connected to server", (done) => {
         flow[0].port = port;
         flow[0].autoConnect = true;

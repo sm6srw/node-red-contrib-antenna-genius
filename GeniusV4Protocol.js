@@ -22,6 +22,7 @@ class GeniusV4Protocol {
     }
 
     _handleLine(line) {
+        console.log("Handling line: " + line);
         if (!line) return;
 
         if (line.startsWith("S")) {
@@ -63,16 +64,29 @@ class GeniusV4Protocol {
         }
     }
 
-    sendCommand(cmd) {
+    sendCommand(cmd, timeoutMs) {
         const seq = this.nextSeq();
+        console.log("Sending command: " + cmd + " with sequence number: " + seq);
         return new Promise((resolve, reject) => {
-            this.pending.set(seq, { resolve, reject, lines: null, multi: false });
+            const entry = { resolve, reject, lines: null, multi: false };
+            if (timeoutMs) {
+                const timer = setTimeout(() => {
+                    this.pending.delete(seq);
+                    const error = new Error(`Timeout waiting for reply to '${cmd}' (unterminated buffer: ${JSON.stringify(this.lineBuffer)})`);
+                    error.code = "ETIMEDOUT";
+                    reject(error);
+                }, timeoutMs);
+                entry.resolve = (v) => { clearTimeout(timer); resolve(v); };
+                entry.reject = (e) => { clearTimeout(timer); reject(e); };
+            }
+            this.pending.set(seq, entry);
             this.socket.write(`C${seq}|${cmd}\r\n`);
         });
     }
 
     sendCommandMulti(cmd) {
         const seq = this.nextSeq();
+        console.log("Sending multi-line command: " + cmd + " with sequence number: " + seq);
         return new Promise((resolve, reject) => {
             this.pending.set(seq, { resolve, reject, lines: [], multi: true });
             this.socket.write(`C${seq}|${cmd}\r\n`);

@@ -3,6 +3,7 @@ const { PromiseSocket } = require("promise-socket");
 const EventEmitter = require("events");
 const Utils = require("./GeniusUtils");
 const { GeniusV4Protocol, parseInfo, parsePort, parseAntennaList, parseBandList } = require("./GeniusV4Protocol");
+const { log } = require("console");
 
 class UpdatesEventEmitter extends EventEmitter {}
 
@@ -88,9 +89,11 @@ module.exports = (RED) => {
                 try {
                     if (banner && /^V4/.test(banner)) {
                         this.apiVersion = 4;
+                        this.log("Detected V4 device from banner: " + banner);
                         await this._connectV4();
                     } else {
                         this.apiVersion = 3;
+                        this.log("Assuming V3 device as no V4 banner was detected.");
                         await this._connectV3();
                     }
                 } catch (err) {
@@ -184,9 +187,12 @@ module.exports = (RED) => {
 
             const infoMsg = await v4.sendCommand("info get");
             this.info = parseInfo(infoMsg);
+            this.log("Retrieved info from V4 device: " + infoMsg);
 
             const port1Msg = await v4.sendCommand("port get 1");
+            this.log("Retrieved port 1 info from V4 device: " + port1Msg);
             const port2Msg = await v4.sendCommand("port get 2");
+            this.log("Retrieved port 2 info from V4 device: " + port2Msg);
             const port1 = parsePort(port1Msg);
             const port2 = parsePort(port2Msg);
             this.status = {
@@ -201,17 +207,19 @@ module.exports = (RED) => {
                 stackReach: Math.ceil(this.info.antennas / 8),
             };
 
-            const antennaLines = await v4.sendCommandMulti("antenna list");
-            this.antennas = parseAntennaList(antennaLines);
+            const antennaLines = await v4.sendCommandMulti("antenna list");        
+            this.antennas = parseAntennaList(antennaLines); 
             this.updatesEventEmitter.emit("antennas");
-
+            this.log("Retrieved antenna list from V4 device: " + antennaLines.join("\n"));
             const bandLines = await v4.sendCommandMulti("band list");
             this.bands = parseBandList(bandLines);
             this.updatesEventEmitter.emit("bands");
+            this.log("Retrieved band list from V4 device: " + bandLines.join("\n"));    
 
-            await v4.sendCommand("sub port all");
-
+            // Register before subscribing: the device pushes status lines immediately
+            // and newer firmware may not send an R reply for "sub".
             v4.onStatus((msg) => {
+                this.log("Received status message from V4 device: " + msg);
                 if (msg.startsWith("port ")) {
                     const portData = parsePort(msg);
                     if (portData.portNum === 1) {
@@ -232,12 +240,27 @@ module.exports = (RED) => {
                 }
             });
 
+            try {
+                await v4.sendCommand("sub port all", 1000);
+                this.log("Sent subscription command to V4 device for all ports.");
+            } catch (err) {
+                if (err.code !== "ETIMEDOUT") {
+                    throw err;
+                }
+                this.log("No reply to subscription command (continuing): " + err.message);
+            }
+
+            if (this._v4 !== v4 || !this.connected) return;
+
+            this.log("V4 device connected, emitting connected event.");
             this.updatesEventEmitter.emit("connected");
+            this.log("Emitting initial status to consumer nodes.");
             // Emit initial status so consumer nodes produce output immediately.
             // In v3 the poll interval does this; in v4 we only get push updates
             // when something changes, so we trigger it manually here.
             this.refresh = 0;
             this.updatesEventEmitter.emit("status", true);
+            this.log("Initial status emitted.");
         }
 
         async _reloadV4Antennas() {

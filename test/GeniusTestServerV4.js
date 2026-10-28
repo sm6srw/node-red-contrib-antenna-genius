@@ -1,6 +1,8 @@
 const net = require("net");
 
 var server;
+var received = [];
+var connections = [];
 
 const bands = [
     "band 0 name=None freq_start=0.000000 freq_stop=0.000000",
@@ -32,9 +34,13 @@ const antennas = [
     "antenna 8 name=Antenna_8 tx=ffff rx=ffff inband=0000",
 ];
 
-const start = () => {
+// silentSub mimics firmware 4.19: "sub port all" pushes status but sends no R reply.
+const start = ({ silentSub = false, subError = false, closeOnSub = false } = {}) => {
+    received = [];
+    connections = [];
     server = net.createServer();
     server.on("connection", (conn) => {
+        connections.push(conn);
         let lineBuffer = "";
         let portSubscribed = false;
 
@@ -64,6 +70,7 @@ const start = () => {
                 const pipeIdx = trimmed.indexOf("|");
                 const seq = parseInt(trimmed.substring(1, pipeIdx));
                 const cmd = trimmed.substring(pipeIdx + 1);
+                received.push(cmd);
 
                 if (cmd === "info get") {
                     sendResponse(seq, "info v=4.0.22 date=2023-08-22 btl=1.6 hw=2.0 serial=9A-3A-DC name=TestGenius ports=2 antennas=8 mode=master uptime=3600");
@@ -77,7 +84,16 @@ const start = () => {
                     sendMultiResponse(seq, bands);
                 } else if (cmd === "sub port all") {
                     portSubscribed = true;
-                    sendResponse(seq, "");
+                    if (closeOnSub) {
+                        conn.destroy();
+                    } else if (subError) {
+                        conn.write(`R${seq}|1|subscription failed\r\n`);
+                    } else if (silentSub) {
+                        conn.write("S0|port 1 auto=1 source=AUTO band=1 rxant=2 txant=2 tx=0 inhibit=0\r\n");
+                        conn.write("S0|port 2 auto=1 source=AUTO band=2 rxant=4 txant=4 tx=0 inhibit=0\r\n");
+                    } else {
+                        sendResponse(seq, "");
+                    }
                 } else if (cmd.startsWith("port set ")) {
                     sendResponse(seq, "");
                 } else {
@@ -98,5 +114,15 @@ const stop = () => {
     server.unref();
 };
 
+const push = (line) => {
+    for (const conn of connections) {
+        conn.write(`${line}\r\n`);
+    }
+};
+
+const getReceived = () => received;
+
 exports.start = start;
 exports.stop = stop;
+exports.push = push;
+exports.getReceived = getReceived;

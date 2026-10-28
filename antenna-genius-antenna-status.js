@@ -28,7 +28,9 @@ module.exports = (RED) => {
                 return;
             }
 
-            this.server.updatesEventEmitter.on("connected", () => {
+            const emitter = this.server.updatesEventEmitter;
+
+            const onConnected = () => {
                 if (this.server.info.name) {
                     this.status({
                         fill: "green",
@@ -36,17 +38,17 @@ module.exports = (RED) => {
                         text: this.server.info.name,
                     });
                 }
-            });
+            };
 
-            this.server.updatesEventEmitter.on("closed", () => {
+            const onClosed = () => {
                 this.status({
                     fill: "red",
                     shape: "ring",
                     text: "disconnected",
                 });
-            });
+            };
 
-            this.server.updatesEventEmitter.on("status", (forceUpdate) => {
+            const onStatus = (forceUpdate) => {
                 let maxNumberOfAntennas = this.server.status.stackReach * 8;
                 if (
                     this.antennaNumber < 1 ||
@@ -133,19 +135,30 @@ module.exports = (RED) => {
                 let radioBTopic = "2;" + this.antennaNumber;
 
                 if (changed) {
+                    // Send copies so downstream nodes can't mutate the cached state.
                     node.send([
                         {
-                            payload: this.radioA,
+                            payload: { ...this.radioA },
                             enabled: this.radioA.enabled,
                             topic: radioATopic,
                         },
                         {
-                            payload: this.radioB,
+                            payload: { ...this.radioB },
                             enabled: this.radioB.enabled,
                             topic: radioBTopic,
                         },
                     ]);
                 }
+            };
+
+            emitter.on("connected", onConnected);
+            emitter.on("closed", onClosed);
+            emitter.on("status", onStatus);
+
+            this.on("close", () => {
+                emitter.removeListener("connected", onConnected);
+                emitter.removeListener("closed", onClosed);
+                emitter.removeListener("status", onStatus);
             });
 
             this.server.connect();

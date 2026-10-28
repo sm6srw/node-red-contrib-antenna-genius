@@ -17,7 +17,9 @@ module.exports = (RED) => {
                 return;
             }
 
-            this.server.updatesEventEmitter.on("connected", () => {
+            const emitter = this.server.updatesEventEmitter;
+
+            const onConnected = () => {
                 if (this.server.info.name) {
                     this.status({
                         fill: "green",
@@ -25,17 +27,17 @@ module.exports = (RED) => {
                         text: this.server.info.name,
                     });
                 }
-            });
+            };
 
-            this.server.updatesEventEmitter.on("closed", () => {
+            const onClosed = () => {
                 this.status({
                     fill: "red",
                     shape: "ring",
                     text: "disconnected",
                 });
-            });
+            };
 
-            this.server.updatesEventEmitter.on("status", (forceUpdate) => {
+            const onStatus = (forceUpdate) => {
                 let bandIndexA = this.server.status.portA_band;
                 let bandIndexB = this.server.status.portB_band;
 
@@ -81,6 +83,16 @@ module.exports = (RED) => {
                             bandNameB,
                     });
                 }
+            };
+
+            emitter.on("connected", onConnected);
+            emitter.on("closed", onClosed);
+            emitter.on("status", onStatus);
+
+            this.on("close", () => {
+                emitter.removeListener("connected", onConnected);
+                emitter.removeListener("closed", onClosed);
+                emitter.removeListener("status", onStatus);
             });
 
             this.server.connect();

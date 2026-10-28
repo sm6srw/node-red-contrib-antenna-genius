@@ -28,6 +28,7 @@ module.exports = (RED) => {
             this.apiVersion = null;
             this._v4 = null;
             this._v4DataHandler = null;
+            this._v3DataHandler = null;
 
             this.updatesEventEmitter = new UpdatesEventEmitter();
             this.updatesEventEmitter.setMaxListeners(0);
@@ -46,6 +47,7 @@ module.exports = (RED) => {
                     this._v4DataHandler = null;
                 }
                 this._v4 = null;
+                this._removeV3Handler();
 
                 if (this.updatesEventEmitter.listenerCount("closed") == 0) {
                     this.log(
@@ -115,10 +117,18 @@ module.exports = (RED) => {
                     this._v4DataHandler = null;
                 }
                 this._v4 = null;
+                this._removeV3Handler();
                 this.client.end();
                 this.forceUpdate();
                 done();
             });
+        }
+
+        _removeV3Handler() {
+            if (this._v3DataHandler) {
+                this.client.removeListener("data", this._v3DataHandler);
+                this._v3DataHandler = null;
+            }
         }
 
         async _connectV3() {
@@ -135,25 +145,29 @@ module.exports = (RED) => {
             this.info = Utils.decode(packet);
 
             let numAntennas = 8 * this.status.stackReach;
+            const antennas = [];
             for (let index = 1; index <= numAntennas; ++index) {
                 let command = Utils.encode(0, 0, 412, 0, index.toString());
                 await promiseClient.write(command);
                 let packet = await promiseClient.read();
                 let data = Utils.decode(packet);
-                this.antennas.push(data);
+                antennas.push(data);
             }
+            this.antennas = antennas;
             this.updatesEventEmitter.emit("antennas");
 
+            const bands = [];
             for (let index = 0; index < 16; ++index) {
                 let command = Utils.encode(0, 0, 82, 0, index.toString());
                 await promiseClient.write(command);
                 let packet = await promiseClient.read();
                 let data = Utils.decode(packet);
-                this.bands.push(data);
+                bands.push(data);
             }
+            this.bands = bands;
             this.updatesEventEmitter.emit("bands");
 
-            this.client.on("data", (packet) => {
+            this._v3DataHandler = (packet) => {
                 let decoded = Utils.decode(packet);
                 if (decoded.command == 401) {
                     this.status = {
@@ -166,7 +180,8 @@ module.exports = (RED) => {
                         this.refresh == 0
                     );
                 }
-            });
+            };
+            this.client.on("data", this._v3DataHandler);
 
             this.interval = setInterval(() => {
                 let command = Utils.encode(0, 0, 401, 0, "");

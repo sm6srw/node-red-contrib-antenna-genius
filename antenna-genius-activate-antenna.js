@@ -62,7 +62,7 @@ module.exports = (RED) => {
                         shape: "ring",
                         text: "topic is not set",
                     });
-                    this.server.forceUpdate();
+                    this.server.resendStatus();
                 }
                 if (done) {
                     done();

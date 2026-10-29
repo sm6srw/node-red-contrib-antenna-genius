@@ -10,6 +10,11 @@
                 required: true,
                 validate: RED.validators.number(),
             },
+            resendInterval: {
+                value: 60,
+                required: true,
+                validate: RED.validators.number(),
+            },
         },
         inputs: 0,
         outputs: 2,
@@ -43,6 +48,16 @@
             placeholder="Antenna Number"
         />
     </div>
+    <div class="form-row">
+        <label for="node-input-resendInterval"
+            ><i class="fa fa-repeat"></i> Resend (s)</label
+        >
+        <input
+            type="text"
+            id="node-input-resendInterval"
+            placeholder="Seconds, 0 to disable"
+        />
+    </div>
 </script>
 
 <script type="text/markdown" data-help-name="antenna-genius-antenna-status">
@@ -53,6 +68,8 @@ Return Radio A & B status for an antenna.
 : Server (antenna genius server) : select antenna genius server to use.
 
 : Antenna Number (integer) : Antenna number to get status for. Valid values are from 1 up to 32 (8 for one, 16 for two, 24 for three and 32 for four interconnected Antenna Geniuses).
+
+: Resend (seconds) : while connected, re-send the current status this often even if nothing changed, so downstream nodes (for example dashboard buttons that remember the last topic) recover if they lose their state. Use 0 to disable. Default 60.
 
 ### Outputs
 

@@ -121,6 +121,38 @@ describe("antenna-genius-activate-antenna Node", () => {
         });
     });
 
+    it("should re-emit status immediately when topic is not set", (done) => {
+        helper.load(nodes, flow, () => {
+            let n2 = helper.getNode("n2");
+            let server = n2.server;
+            server.info = { name: "Name" };
+            server.connected = true;
+            server.status = { portA_band: 0, portB_band: 1 };
+            server.antennas = [{ name: "Antenna1", bands: [1, 1] }];
+            let forced = [];
+            server.updatesEventEmitter.on("status", (force) => forced.push(force));
+
+            n2.receive({ payload: true });
+
+            expect(forced).toEqual([true]);
+            server.connected = false;
+            done();
+        });
+    });
+
+    it("should not re-emit status when not connected", (done) => {
+        helper.load(nodes, flow, () => {
+            let n2 = helper.getNode("n2");
+            let forced = [];
+            n2.server.updatesEventEmitter.on("status", (force) => forced.push(force));
+
+            n2.receive({ payload: true });
+
+            expect(forced).toEqual([]);
+            done();
+        });
+    });
+
     it("should provide for valid input", (done) => {
         helper.load(nodes, flow, () => {
             let n2 = helper.getNode("n2");

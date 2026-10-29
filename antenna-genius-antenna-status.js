@@ -155,7 +155,27 @@ module.exports = (RED) => {
             emitter.on("closed", onClosed);
             emitter.on("status", onStatus);
 
+            // Periodically re-send so downstream nodes that lost their state recover.
+            const resendSeconds =
+                config.resendInterval === undefined ||
+                config.resendInterval === ""
+                    ? 60
+                    : Number(config.resendInterval);
+            let resendTimer = null;
+            if (resendSeconds > 0) {
+                resendTimer = setInterval(() => {
+                    if (
+                        this.server.connected &&
+                        this.server.status &&
+                        this.server.antennas.length > 0
+                    ) {
+                        onStatus(true);
+                    }
+                }, resendSeconds * 1000);
+            }
+
             this.on("close", () => {
+                clearInterval(resendTimer);
                 emitter.removeListener("connected", onConnected);
                 emitter.removeListener("closed", onClosed);
                 emitter.removeListener("status", onStatus);

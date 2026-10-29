@@ -187,6 +187,68 @@ describe("antenna-genius-antenna-status Node", () => {
         });
     });
 
+    const primeServer = (server) => {
+        server.info = { name: "Name" };
+        server.connected = true;
+        server.status = {
+            portA_antenna: 1,
+            portA_band: 0,
+            portB_antenna: 2,
+            portB_band: 1,
+        };
+        server.antennas = [
+            { name: "Antenna0", bands: [1, 1] },
+            { name: "Antenna1", bands: [1, 1] },
+        ];
+    };
+
+    it("should periodically re-send the status while connected", async () => {
+        const resendFlow = JSON.parse(JSON.stringify(flow));
+        resendFlow[1].resendInterval = 0.05;
+        await new Promise((resolve) => helper.load(nodes, resendFlow, resolve));
+        let n2 = helper.getNode("n2");
+        primeServer(n2.server);
+
+        n2.server.updatesEventEmitter.emit("status", false);
+        expect(n2.send.callCount).toBe(1);
+
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(n2.send.callCount).toBeGreaterThan(1);
+        let [msgA, msgB] = n2.send.lastCall.args[0];
+        expect(msgA.topic).toBe("1;2");
+        expect(msgB.topic).toBe("2;2");
+
+        n2.server.connected = false;
+    });
+
+    it("should not re-send the status when the interval is 0", async () => {
+        const resendFlow = JSON.parse(JSON.stringify(flow));
+        resendFlow[1].resendInterval = 0;
+        await new Promise((resolve) => helper.load(nodes, resendFlow, resolve));
+        let n2 = helper.getNode("n2");
+        primeServer(n2.server);
+
+        n2.server.updatesEventEmitter.emit("status", false);
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        expect(n2.send.callCount).toBe(1);
+
+        n2.server.connected = false;
+    });
+
+    it("should stop re-sending after being closed", async () => {
+        const resendFlow = JSON.parse(JSON.stringify(flow));
+        resendFlow[1].resendInterval = 0.05;
+        await new Promise((resolve) => helper.load(nodes, resendFlow, resolve));
+        let n2 = helper.getNode("n2");
+        primeServer(n2.server);
+
+        await n2.close();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(n2.send.callCount).toBe(0);
+
+        n2.server.connected = false;
+    });
+
     it("should send copies of the payload, not its internal state", (done) => {
         helper.load(nodes, flow, () => {
             let n2 = helper.getNode("n2");

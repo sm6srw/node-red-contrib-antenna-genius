@@ -12,8 +12,15 @@
             },
             resendInterval: {
                 value: 60,
-                required: true,
-                validate: RED.validators.number(),
+                required: false,
+                // Nodes created before this setting existed have no value.
+                validate: function (v) {
+                    return (
+                        v === undefined ||
+                        v === "" ||
+                        (!isNaN(Number(v)) && Number(v) >= 0)
+                    );
+                },
             },
         },
         inputs: 0,
@@ -69,7 +76,7 @@ Return Radio A & B status for an antenna.
 
 : Antenna Number (integer) : Antenna number to get status for. Valid values are from 1 up to 32 (8 for one, 16 for two, 24 for three and 32 for four interconnected Antenna Geniuses).
 
-: Resend (seconds) : while connected, re-send the current status this often even if nothing changed, so downstream nodes (for example dashboard buttons that remember the last topic) recover if they lose their state. Use 0 to disable. Default 60.
+: Resend (seconds) : while connected, re-send the current status this often even if nothing changed, so downstream nodes (for example dashboard buttons that remember the last topic) recover if they lose their state. Use 0 to disable. Leave blank for the default of 60.
 
 ### Outputs
 

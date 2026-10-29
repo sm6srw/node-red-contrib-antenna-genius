@@ -235,6 +235,23 @@ describe("antenna-genius-antenna-status Node", () => {
         n2.server.connected = false;
     });
 
+    it.each([
+        ["above the timer limit", 2592000],
+        ["infinite", Infinity],
+    ])("should not re-send with an interval %s", async (description, interval) => {
+        const resendFlow = JSON.parse(JSON.stringify(flow));
+        resendFlow[1].resendInterval = interval;
+        await new Promise((resolve) => helper.load(nodes, resendFlow, resolve));
+        let n2 = helper.getNode("n2");
+        primeServer(n2.server);
+
+        n2.server.updatesEventEmitter.emit("status", false);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        expect(n2.send.callCount).toBe(1);
+
+        n2.server.connected = false;
+    });
+
     it("should stop re-sending after being closed", async () => {
         const resendFlow = JSON.parse(JSON.stringify(flow));
         resendFlow[1].resendInterval = 0.05;

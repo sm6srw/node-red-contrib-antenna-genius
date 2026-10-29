@@ -15,10 +15,13 @@
                 required: false,
                 // Nodes created before this setting existed have no value.
                 validate: function (v) {
+                    const delay = Number(v) * 1000;
                     return (
                         v === undefined ||
                         v === "" ||
-                        (!isNaN(Number(v)) && Number(v) >= 0)
+                        (Number.isFinite(delay) &&
+                            delay >= 0 &&
+                            delay <= 2147483647)
                     );
                 },
             },

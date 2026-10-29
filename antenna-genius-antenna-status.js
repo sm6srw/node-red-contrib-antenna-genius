@@ -161,8 +161,13 @@ module.exports = (RED) => {
                 config.resendInterval === ""
                     ? 60
                     : Number(config.resendInterval);
+            const resendDelay = resendSeconds * 1000;
             let resendTimer = null;
-            if (resendSeconds > 0) {
+            if (
+                Number.isFinite(resendDelay) &&
+                resendDelay > 0 &&
+                resendDelay <= 2147483647
+            ) {
                 resendTimer = setInterval(() => {
                     if (
                         this.server.connected &&
@@ -171,7 +176,7 @@ module.exports = (RED) => {
                     ) {
                         onStatus(true);
                     }
-                }, resendSeconds * 1000);
+                }, resendDelay);
             }
 
             this.on("close", () => {

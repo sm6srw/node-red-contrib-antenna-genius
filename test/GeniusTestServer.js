@@ -1,5 +1,5 @@
 const net = require("net");
-const { PromiseSocket } = require("promise-socket");
+const { PromiseSocket } = require("../PromiseSocket");
 const { encode, decodeheader } = require("../GeniusUtils.js");
 
 var server;

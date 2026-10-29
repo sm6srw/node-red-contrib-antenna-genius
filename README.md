@@ -3,6 +3,8 @@ Antenna Genius Control and Monitoring Nodes
 
 Supports V3 and V4 of the Antenna Genius firmware.
 
+Requires Node.js 18 or newer and Node-RED 3.1.0 or newer.
+
 [![Node.js CI](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/node.js.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/node.js.yml) [![Node.js Package](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/npm-publish.yml) [![CodeQL](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/codeql-analysis.yml) [![njsscan sarif](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/njsscan-analysis.yml/badge.svg)](https://github.com/sm6srw/node-red-contrib-antenna-genius/actions/workflows/njsscan-analysis.yml)
 
 ![image](https://user-images.githubusercontent.com/7033002/148573983-00305f15-7acf-4d4d-bb1f-9c820c4b3a79.png) ![image](https://user-images.githubusercontent.com/7033002/148489672-9e2c03e0-a968-4c2f-9dc7-923c5423fad7.png)
@@ -30,6 +32,8 @@ Returns the current band labels for radio A and radio B.
 `Server (antenna genius server)`: select antenna genius server to use.
 
 `Antenna Number (integer)`: Antenna number to get status for. Valid values are from 1 up to 32 (8 for one, 16 for two, 24 for three and 32 for four interconnected Antenna Geniuses).
+
+`Resend (seconds)`: while connected, re-send the current status this often even if nothing changed, so downstream nodes (for example dashboard buttons that remember the last topic) recover if they lose their state. Use `0` to disable. Leave blank for the default of 60.
 
 ### Outputs
 
@@ -79,7 +83,7 @@ Set the antenna defined in topic as active.
 
 ### Details
 
-See the `antenna-status`: node for more information.
+See the `antenna-status`: node for more information. If a message without a topic is received, the current status is re-sent to all status nodes immediately.
 
 ## antenna-genius-server
 

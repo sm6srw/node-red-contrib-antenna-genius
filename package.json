@@ -22,7 +22,11 @@
     "url": "https://github.com/sm6srw/node-red-contrib-antenna-genius/issues"
   },
   "homepage": "https://github.com/sm6srw/node-red-contrib-antenna-genius#readme",
+  "engines": {
+    "node": ">=18"
+  },
   "node-red": {
+    "version": ">=3.1.0",
     "nodes": {
       "antenna-genius-server": "antenna-genius-server.js",
       "antenna-genius-band-labels": "antenna-genius-band-labels.js",
@@ -30,9 +34,7 @@
       "antenna-genius-activate-antenna": "antenna-genius-activate-antenna.js"
     }
   },
-  "dependencies": {
-    "promise-socket": "^7.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "auto-dist-tag": "^2.1.1",
     "jest": "^28.1.3",

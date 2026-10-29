@@ -1,5 +1,5 @@
 const Net = require("net");
-const { PromiseSocket } = require("promise-socket");
+const { PromiseSocket } = require("./PromiseSocket");
 const EventEmitter = require("events");
 const Utils = require("./GeniusUtils");
 const { GeniusV4Protocol, parseInfo, parsePort, parseAntennaList, parseBandList } = require("./GeniusV4Protocol");

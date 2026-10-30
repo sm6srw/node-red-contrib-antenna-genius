@@ -310,6 +310,21 @@ module.exports = (RED) => {
         forceUpdate() {
             this.refresh = -1;
         }
+
+        // V3 re-emits on the next poll, but V4 only pushes on change,
+        // so emit the current status right away.
+        resendStatus() {
+            this.forceUpdate();
+            if (
+                this.connected &&
+                this.status &&
+                this.status.portA_band !== undefined &&
+                this.antennas.length > 0
+            ) {
+                this.refresh = 0;
+                this.updatesEventEmitter.emit("status", true);
+            }
+        }
     }
 
     RED.nodes.registerType("antenna-genius-server", AntennaGeniusServerNode);

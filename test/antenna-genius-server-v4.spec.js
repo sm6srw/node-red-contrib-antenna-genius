@@ -304,6 +304,11 @@ describe("antenna-genius-server Node (v4)", () => {
             expect(n1.status.portB_inhibit).toBe(1);
         });
 
+        it("subscribes to antenna changes so 'antenna reload' is delivered", async () => {
+            await connectNode();
+            expect(testServer.getReceived()).toContain("sub antenna");
+        });
+
         it("reloads the antenna list on 'antenna reload'", async () => {
             const n1 = await connectNode();
             const p = nextEvent(n1, "antennas");

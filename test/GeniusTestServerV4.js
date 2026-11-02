@@ -94,6 +94,8 @@ const start = ({ silentSub = false, subError = false, closeOnSub = false } = {})
                     } else {
                         sendResponse(seq, "");
                     }
+                } else if (cmd === "sub antenna") {
+                    if (!silentSub) sendResponse(seq, "");
                 } else if (cmd.startsWith("port set ")) {
                     sendResponse(seq, "");
                 } else {

@@ -3,7 +3,10 @@
   "version": "2.2.0",
   "description": "Antenna Genius Control and Monitoring Nodes",
   "keywords": [
-    "node-red"
+    "node-red",
+    "antenna genius",
+    "4o3a",
+    "ham radio"
   ],
   "scripts": {
     "test": "jest --coverage",
